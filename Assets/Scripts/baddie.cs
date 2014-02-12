@@ -211,8 +211,21 @@ public class baddie : MonoBehaviour {
 
 	void shooterBehavior () {
 
+		//check walker status to determine target, if walker is not safe, then target walker
+		if (checkWalker && checkWalker.safe == false) {
+			
+			myTarget = storeWalkerPos + Vector3.up;
+			//Debug.Log("Enemy moving towards Walker at: " +  targetPosition);
+			
+		} else {
+			
+			myTarget = storePlayerPos + Vector3.up;
+			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
+			
+		}
+
 		var targettingRange = maxTargetRange * maxTargetRange;
-		myTarget = storePlayerPos + Vector3.up;
+		//myTarget = storePlayerPos + Vector3.up;
 		var offsetToShootTarget = transform.position - myTarget;
 
 		if (offsetToShootTarget.sqrMagnitude < targettingRange) {
