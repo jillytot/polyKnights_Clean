@@ -1,0 +1,248 @@
+fileFormatVersion: 2
+guid: 819826eaeb945412e829056d4b36a30d
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: centerHip
+    100002: group1
+    100004: ikHandle1
+    100006: ikHandle2
+    100008: leftEar
+    100010: leftFoot
+    100012: leftFootEnd
+    100014: leftHip
+    100016: leftUpperHip
+    100018: pasted__BaddyBoss
+    100020: pasted__polySurface600
+    100022: pasted__polySurface601
+    100024: pasted__polySurface602
+    100026: pCube3
+    100028: polySurface24
+    100030: polySurface32
+    100032: polySurface33
+    100034: polySurface34
+    100036: polySurface35
+    100038: polySurface57
+    100040: pSphere4
+    100042: pSphere5
+    100044: pSphere6
+    100046: //RootNode
+    100048: rightEar
+    100050: rightFoot
+    100052: rightFootEnd
+    100054: rightHip
+    100056: rightUpperHip
+    100058: transform10
+    100060: transform11
+    100062: transform12
+    100064: transform13
+    100066: transform14
+    100068: transform15
+    100070: transform16
+    100072: transform17
+    100074: transform18
+    100076: transform19
+    100078: transform20
+    400000: centerHip
+    400002: group1
+    400004: ikHandle1
+    400006: ikHandle2
+    400008: leftEar
+    400010: leftFoot
+    400012: leftFootEnd
+    400014: leftHip
+    400016: leftUpperHip
+    400018: pasted__BaddyBoss
+    400020: pasted__polySurface600
+    400022: pasted__polySurface601
+    400024: pasted__polySurface602
+    400026: pCube3
+    400028: polySurface24
+    400030: polySurface32
+    400032: polySurface33
+    400034: polySurface34
+    400036: polySurface35
+    400038: polySurface57
+    400040: pSphere4
+    400042: pSphere5
+    400044: pSphere6
+    400046: //RootNode
+    400048: rightEar
+    400050: rightFoot
+    400052: rightFootEnd
+    400054: rightHip
+    400056: rightUpperHip
+    400058: transform10
+    400060: transform11
+    400062: transform12
+    400064: transform13
+    400066: transform14
+    400068: transform15
+    400070: transform16
+    400072: transform17
+    400074: transform18
+    400076: transform19
+    400078: transform20
+    4300000: polySurface57
+    7400000: trot
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: polySurface57
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 2
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: trot
+      takeName: Take 001
+      firstFrame: 109
+      lastFrame: 138
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: centerHip
+        weight: 1
+      - path: centerHip/leftEar
+        weight: 1
+      - path: centerHip/leftUpperHip
+        weight: 1
+      - path: centerHip/leftUpperHip/leftHip
+        weight: 1
+      - path: centerHip/leftUpperHip/leftHip/leftFoot
+        weight: 1
+      - path: centerHip/leftUpperHip/leftHip/leftFoot/leftFootEnd
+        weight: 1
+      - path: centerHip/pCube3
+        weight: 1
+      - path: centerHip/pCube3/transform17
+        weight: 1
+      - path: centerHip/polySurface35
+        weight: 1
+      - path: centerHip/polySurface35/transform13
+        weight: 1
+      - path: centerHip/rightEar
+        weight: 1
+      - path: centerHip/rightUpperHip
+        weight: 1
+      - path: centerHip/rightUpperHip/rightHip
+        weight: 1
+      - path: centerHip/rightUpperHip/rightHip/rightFoot
+        weight: 1
+      - path: centerHip/rightUpperHip/rightHip/rightFoot/rightFootEnd
+        weight: 1
+      - path: group1
+        weight: 1
+      - path: group1/pasted__BaddyBoss
+        weight: 1
+      - path: group1/pasted__BaddyBoss/pasted__polySurface600
+        weight: 1
+      - path: group1/pasted__BaddyBoss/pasted__polySurface600/transform12
+        weight: 1
+      - path: group1/pasted__BaddyBoss/pasted__polySurface601
+        weight: 1
+      - path: group1/pasted__BaddyBoss/pasted__polySurface601/transform11
+        weight: 1
+      - path: group1/pasted__BaddyBoss/pasted__polySurface602
+        weight: 1
+      - path: group1/pasted__BaddyBoss/pasted__polySurface602/transform10
+        weight: 1
+      - path: ikHandle1
+        weight: 1
+      - path: ikHandle2
+        weight: 1
+      - path: polySurface24
+        weight: 1
+      - path: polySurface24/polySurface32
+        weight: 1
+      - path: polySurface24/polySurface32/transform16
+        weight: 1
+      - path: polySurface24/polySurface33
+        weight: 1
+      - path: polySurface24/polySurface33/transform15
+        weight: 1
+      - path: polySurface24/polySurface34
+        weight: 1
+      - path: polySurface24/polySurface34/transform14
+        weight: 1
+      - path: polySurface57
+        weight: 1
+      - path: pSphere4
+        weight: 1
+      - path: pSphere4/transform20
+        weight: 1
+      - path: pSphere5
+        weight: 1
+      - path: pSphere5/transform19
+        weight: 1
+      - path: pSphere6
+        weight: 1
+      - path: pSphere6/transform18
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 10
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: centerHip
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  userData: 

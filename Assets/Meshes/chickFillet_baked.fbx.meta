@@ -1,0 +1,698 @@
+fileFormatVersion: 2
+guid: c1554efca7da24eebbd1ce5301f6f923
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: AllManip
+    100002: Chest
+    100004: //RootNode
+    100006: chickFillet_mesh
+    100008: Head
+    100010: Head_End
+    100012: Hips
+    100014: HipsManip
+    100016: L_Arm
+    100018: L_Elbow
+    100020: L_Foot
+    100022: L_Hand
+    100024: L_Knee
+    100026: L_Leg
+    100028: L_Shoulder
+    100030: L_Toe
+    100032: L_Wrist
+    100034: Neck
+    100036: R_Arm
+    100038: R_Elbow
+    100040: R_Foot
+    100042: R_Hand
+    100044: R_Knee
+    100046: R_Leg
+    100048: R_Shoulder
+    100050: R_Toe
+    100052: R_Wrist
+    100054: Spine
+    400000: AllManip
+    400002: Chest
+    400004: //RootNode
+    400006: chickFillet_mesh
+    400008: Head
+    400010: Head_End
+    400012: Hips
+    400014: HipsManip
+    400016: L_Arm
+    400018: L_Elbow
+    400020: L_Foot
+    400022: L_Hand
+    400024: L_Knee
+    400026: L_Leg
+    400028: L_Shoulder
+    400030: L_Toe
+    400032: L_Wrist
+    400034: Neck
+    400036: R_Arm
+    400038: R_Elbow
+    400040: R_Foot
+    400042: R_Hand
+    400044: R_Knee
+    400046: R_Leg
+    400048: R_Shoulder
+    400050: R_Toe
+    400052: R_Wrist
+    400054: Spine
+    4300000: chickFillet_mesh
+    7400000: Run2
+    7400002: swordyIdle
+    7400004: swordyRun
+    7400006: swordyHorizontalSlash
+    7400008: swordyJump
+    7400010: swordyStab
+    7400012: swordyDefend
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: chickFillet_mesh
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 3
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Run2
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 20
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: AllManip
+        weight: 0
+      - path: AllManip/HipsManip
+        weight: 0
+      - path: chickFillet_mesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/L_Leg
+        weight: 1
+      - path: Hips/L_Leg/L_Knee
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot/L_Toe
+        weight: 0
+      - path: Hips/R_Leg
+        weight: 1
+      - path: Hips/R_Leg/R_Knee
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot/R_Toe
+        weight: 0
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Chest
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist/L_Hand
+        weight: 0
+      - path: Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head/Head_End
+        weight: 0
+      - path: Hips/Spine/Chest/R_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist/R_Hand
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: swordyIdle
+      takeName: Take 001
+      firstFrame: 22
+      lastFrame: 52
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: AllManip
+        weight: 0
+      - path: AllManip/HipsManip
+        weight: 0
+      - path: chickFillet_mesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/L_Leg
+        weight: 1
+      - path: Hips/L_Leg/L_Knee
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot/L_Toe
+        weight: 0
+      - path: Hips/R_Leg
+        weight: 1
+      - path: Hips/R_Leg/R_Knee
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot/R_Toe
+        weight: 0
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Chest
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist/L_Hand
+        weight: 0
+      - path: Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head/Head_End
+        weight: 0
+      - path: Hips/Spine/Chest/R_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist/R_Hand
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: swordyRun
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 20
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: AllManip
+        weight: 0
+      - path: AllManip/HipsManip
+        weight: 0
+      - path: chickFillet_mesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/L_Leg
+        weight: 1
+      - path: Hips/L_Leg/L_Knee
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot/L_Toe
+        weight: 0
+      - path: Hips/R_Leg
+        weight: 1
+      - path: Hips/R_Leg/R_Knee
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot/R_Toe
+        weight: 0
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Chest
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist/L_Hand
+        weight: 0
+      - path: Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head/Head_End
+        weight: 0
+      - path: Hips/Spine/Chest/R_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist/R_Hand
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: swordyHorizontalSlash
+      takeName: Take 001
+      firstFrame: 54
+      lastFrame: 68
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: AllManip
+        weight: 0
+      - path: AllManip/HipsManip
+        weight: 0
+      - path: chickFillet_mesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/L_Leg
+        weight: 1
+      - path: Hips/L_Leg/L_Knee
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot/L_Toe
+        weight: 0
+      - path: Hips/R_Leg
+        weight: 1
+      - path: Hips/R_Leg/R_Knee
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot/R_Toe
+        weight: 0
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Chest
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist/L_Hand
+        weight: 0
+      - path: Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head/Head_End
+        weight: 0
+      - path: Hips/Spine/Chest/R_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist/R_Hand
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: swordyJump
+      takeName: Take 001
+      firstFrame: 70
+      lastFrame: 90
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: AllManip
+        weight: 0
+      - path: AllManip/HipsManip
+        weight: 0
+      - path: chickFillet_mesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/L_Leg
+        weight: 1
+      - path: Hips/L_Leg/L_Knee
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot/L_Toe
+        weight: 0
+      - path: Hips/R_Leg
+        weight: 1
+      - path: Hips/R_Leg/R_Knee
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot/R_Toe
+        weight: 0
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Chest
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist/L_Hand
+        weight: 0
+      - path: Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head/Head_End
+        weight: 0
+      - path: Hips/Spine/Chest/R_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist/R_Hand
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: swordyStab
+      takeName: Take 001
+      firstFrame: 92
+      lastFrame: 107
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: AllManip
+        weight: 0
+      - path: AllManip/HipsManip
+        weight: 0
+      - path: chickFillet_mesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/L_Leg
+        weight: 1
+      - path: Hips/L_Leg/L_Knee
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot/L_Toe
+        weight: 0
+      - path: Hips/R_Leg
+        weight: 1
+      - path: Hips/R_Leg/R_Knee
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot/R_Toe
+        weight: 0
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Chest
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist/L_Hand
+        weight: 0
+      - path: Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head/Head_End
+        weight: 0
+      - path: Hips/Spine/Chest/R_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist/R_Hand
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: swordyDefend
+      takeName: Take 001
+      firstFrame: 109
+      lastFrame: 122
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: AllManip
+        weight: 0
+      - path: AllManip/HipsManip
+        weight: 0
+      - path: chickFillet_mesh
+        weight: 0
+      - path: Hips
+        weight: 1
+      - path: Hips/L_Leg
+        weight: 1
+      - path: Hips/L_Leg/L_Knee
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot
+        weight: 1
+      - path: Hips/L_Leg/L_Knee/L_Foot/L_Toe
+        weight: 0
+      - path: Hips/R_Leg
+        weight: 1
+      - path: Hips/R_Leg/R_Knee
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot
+        weight: 1
+      - path: Hips/R_Leg/R_Knee/R_Foot/R_Toe
+        weight: 0
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Chest
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/L_Shoulder/L_Arm/L_Elbow/L_Wrist/L_Hand
+        weight: 0
+      - path: Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Hips/Spine/Chest/Neck/Head/Head_End
+        weight: 0
+      - path: Hips/Spine/Chest/R_Shoulder
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist
+        weight: 1
+      - path: Hips/Spine/Chest/R_Shoulder/R_Arm/R_Elbow/R_Wrist/R_Hand
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .0500000007
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: AllManip
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  userData: 
