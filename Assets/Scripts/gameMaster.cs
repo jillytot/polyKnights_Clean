@@ -8,6 +8,7 @@ public class gameMaster : MonoBehaviour {
 	public static bool gameOver;
 
 	public static GameObject[] players;
+	//public static Transform[] playerTransforms;
 	public static int playerCount;
 
 	public static GameObject[] walkers;
@@ -31,6 +32,10 @@ public class gameMaster : MonoBehaviour {
 		Debug.Log ("Number of players = " + playerCount);
 		Debug.Log ("Walker Count = " + walkerCount + " & Together they have: " + walkerHealth + "hp");
 
+		foreach (GameObject player in players) {
+
+
+			}
 		}
 
 

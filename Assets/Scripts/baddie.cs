@@ -82,7 +82,11 @@ public class baddie : MonoBehaviour {
 
 	//new targetting stuff;
 	public static GameObject[] getPlayers;
-	//public static Vector3[] playerPositions;
+	public static Vector3[] playerPositions;
+	float[] myTargetDistances;
+	int selectTarget;
+	bool refreshTarget;
+	public float refreshTargetRate = 1;
 
 	
 	void Awake () {
@@ -90,34 +94,11 @@ public class baddie : MonoBehaviour {
 		walkerObjects = GameObject.FindWithTag("Walker"); 
 		playerObjects = GameObject.FindWithTag("Player");
 
-		getPlayers = GameObject.FindGameObjectsWithTag ("Player");
-
-
-
+		getPlayers = GameObject.FindGameObjectsWithTag("Player");
+		playerPositions = new Vector3[getPlayers.Length];
+		myTargetDistances = new float[getPlayers.Length];
 
 		}
-
-	public void findTarget (Vector3 myPos) {
-
-		var playerCount = getPlayers.Length;
-		var playerPositions = new Vector3[playerCount + 1];
-
-				foreach (GameObject player in getPlayers) {
-
-						
-			//if (playerPositions[playerCount] != null) {
-
-						playerPositions[playerCount] = player.transform.transform.position;
-						Debug.Log (playerPositions.Length + " player positions: " + playerPositions);
-			//}
-		}
-
-		foreach (Vector3 positions in playerPositions) {
-
-			print (positions);
-
-				}
-	}
 
 	// Use this for initialization
 	void Start () {
@@ -131,10 +112,11 @@ public class baddie : MonoBehaviour {
 		reloadArrow = false;
 		attackDone = false;
 		startAttacking = false;
+		refreshTarget = true;
 
 		checkWalker = walkerObjects.GetComponent<saveMe>();
 
-		findTarget (transform.position);
+		//findTarget (transform.position);
 
 
 	}
@@ -144,7 +126,15 @@ public class baddie : MonoBehaviour {
 
 
 		storeWalkerPos = walkerObjects.transform.position;
-		storePlayerPos = playerObjects.transform.position;
+
+		if (refreshTarget == true ) {
+
+			refreshTarget = false;
+			storePlayerPos = findTarget(transform.position);
+
+		} 
+
+		storePlayerPos = storePlayerPos;
 
 		//Kill the enemy if their HP reaches 0
 		if (HP <= 0) {
@@ -203,11 +193,14 @@ public class baddie : MonoBehaviour {
 		if (checkWalker && checkWalker.safe == false) {
 
 			targetPosition = storeWalkerPos;
+
+
 			//Debug.Log("Enemy moving towards Walker at: " +  targetPosition);
 
 		} else {
 
-			targetPosition = storePlayerPos;
+			targetPosition = findTarget(transform.position);
+			//targetPosition = storePlayerPos;
 			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
 
 		}
@@ -252,8 +245,9 @@ public class baddie : MonoBehaviour {
 			//Debug.Log("Enemy moving towards Walker at: " +  targetPosition);
 			
 		} else {
+
 			
-			myTarget = storePlayerPos + Vector3.up;
+			myTarget = targetPosition = storePlayerPos + Vector3.up;
 			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
 			
 		}
@@ -298,6 +292,7 @@ public class baddie : MonoBehaviour {
 
 		yield return new WaitForSeconds (Random.Range(attackRate * 0.9f, attackRate));
 		attackReady = true;
+		refreshTarget = true;
 
 		if (shooter == true) {
 
@@ -311,6 +306,7 @@ public class baddie : MonoBehaviour {
 		yield return new WaitForSeconds(1);
 
 		attackDone = true;
+		refreshTarget = true;
 
 	}
 
@@ -408,5 +404,51 @@ public class baddie : MonoBehaviour {
 			hitPlayer.takeDamage(attackPower);
 
 		}
+	}
+
+	Vector3 findTarget (Vector3 myPos) {
+
+		//if (refreshTarget == true) {
+		
+		for (int i = 0; i < getPlayers.Length; i++) {
+			
+			if (i == 0) {
+				
+				selectTarget = 0;
+				
+			}
+			
+			print(getPlayers[i]);
+			playerPositions[i] = getPlayers[i].GetComponent<Transform>().transform.position;
+			
+			Debug.Log("Player: " + (i + 1) + " is located at: " + playerPositions[i]);
+			
+			var distanceOffset = myPos - playerPositions[i];
+			myTargetDistances[i] = distanceOffset.sqrMagnitude;
+			
+			//compare distance to all players, find the closest one
+			if (i > 0 && myTargetDistances[i] > myTargetDistances[i-1]) {
+				
+				selectTarget++;
+				
+				}
+			}
+
+			//refreshTarget = false;
+			//StartCoroutine("refreshTargetBool");
+		//}
+		
+		var chosenTarget = playerPositions[selectTarget];
+		print ("I CHOOSE YOU " + chosenTarget);
+		
+		return chosenTarget;
+		
+	}
+
+	IEnumerator refreshTargetBool () {
+
+		yield return new WaitForSeconds(Random.Range( refreshTargetRate *0.75f, refreshTargetRate * 1.25f) );
+		refreshTarget = true;
+
 	}
 }
