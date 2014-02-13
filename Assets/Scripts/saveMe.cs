@@ -14,7 +14,7 @@ public class saveMe : damageControl {
 	// Use this for initialization
 	void Awake () {
 
-		safe = false;
+		safe = true;
 
 	}
 
@@ -43,11 +43,11 @@ public class saveMe : damageControl {
 
 		if (safe == false) {
 
-			Debug.Log ("Walker is not safe"); 
+			//Debug.Log ("Walker is not safe"); 
 
 		}
 
-		print ("is derp happening?");
+		//print ("is derp happening?");
 
 		//eventually the Walker will need to stop when confronted with an obstical
 		transform.position += Vector3.forward * mySpeed * Time.deltaTime;
@@ -56,9 +56,9 @@ public class saveMe : damageControl {
 
 	IEnumerator triggerUnsafe () {
 	
-		Debug.Log ("You won't be safe for long!!!");
+		//Debug.Log ("You won't be safe for long!!!");
 		yield return new WaitForSeconds(5.0f);
-		Debug.Log("Safety is off!");
+		//Debug.Log("Safety is off!");
 		safe = false;
 
 	}

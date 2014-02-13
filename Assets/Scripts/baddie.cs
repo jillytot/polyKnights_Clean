@@ -80,13 +80,43 @@ public class baddie : MonoBehaviour {
 	bool attackDone; //returns true when attack is finished
 	bool startAttacking;
 
+	//new targetting stuff;
+	public static GameObject[] getPlayers;
+	//public static Vector3[] playerPositions;
+
 	
 	void Awake () {
 
 		walkerObjects = GameObject.FindWithTag("Walker"); 
 		playerObjects = GameObject.FindWithTag("Player");
 
-		
+		getPlayers = GameObject.FindGameObjectsWithTag ("Player");
+
+
+
+
+		}
+
+	public void findTarget (Vector3 myPos) {
+
+		var playerCount = getPlayers.Length;
+		var playerPositions = new Vector3[playerCount + 1];
+
+				foreach (GameObject player in getPlayers) {
+
+						
+			//if (playerPositions[playerCount] != null) {
+
+						playerPositions[playerCount] = player.transform.transform.position;
+						Debug.Log (playerPositions.Length + " player positions: " + playerPositions);
+			//}
+		}
+
+		foreach (Vector3 positions in playerPositions) {
+
+			print (positions);
+
+				}
 	}
 
 	// Use this for initialization
@@ -104,10 +134,14 @@ public class baddie : MonoBehaviour {
 
 		checkWalker = walkerObjects.GetComponent<saveMe>();
 
+		findTarget (transform.position);
+
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
 
 		storeWalkerPos = walkerObjects.transform.position;
 		storePlayerPos = playerObjects.transform.position;
@@ -198,7 +232,7 @@ public class baddie : MonoBehaviour {
 
 		else {
 
-		Debug.Log("normal movement is happening");
+		//Debug.Log("normal movement is happening");
 		float newXPos = Mathf.SmoothDamp(transform.position.x, groundTarget.x, ref smoothX, smoothTime);
 		float newZPos = Mathf.SmoothDamp(transform.position.z, groundTarget.z, ref smoothZ, smoothTime);
 
@@ -370,7 +404,7 @@ public class baddie : MonoBehaviour {
 		//for melee
 		if (hitPlayer && attacking == true) {
 
-			Debug.Log("enemy hit to player");
+			//Debug.Log("enemy hit to player");
 			hitPlayer.takeDamage(attackPower);
 
 		}
