@@ -126,15 +126,20 @@ public class baddie : MonoBehaviour {
 		refreshTarget = true;
 
 		//Store reference to walkerScript
-		checkWalker = walkerObjects.GetComponent<saveMe>();
 
+		if (walkerObjects) {
+		checkWalker = walkerObjects.GetComponent<saveMe>();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+		if (walkerObjects ) {
 
 		storeWalkerPos = walkerObjects.transform.position;
+
+		}
 
 		//if enemy requires a target search, go into the findTarget method
 		if (refreshTarget == true ) {
@@ -395,7 +400,7 @@ public class baddie : MonoBehaviour {
 	void OnTriggerEnter (Collider other) {
 
 		//only damage the walker if not safe
-		if (checkWalker.safe == false) {
+		if (walkerObjects && checkWalker.safe == false) {
 
 		var hitWalker = other.GetComponent<saveMe>();
 

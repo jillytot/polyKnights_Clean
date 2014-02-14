@@ -13,23 +13,26 @@ public class cameraFX : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		if (myLeader) {
+
 		offset = transform.position - myLeader.transform.position;
 		altitude = transform.position.y;
 	
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+		if (myLeader) { 
 
 		cameraTarget = myLeader.transform.position;
-		//var offset = cameraTarget + transform.position;
 	
 		//i'm really confused : [
 		Vector3 targetThis = new Vector3(cameraTarget.x + offset.x, altitude, cameraTarget.z + offset.z);
 		transform.position = Vector3.Slerp(transform.position, targetThis, camSpeed * Time.deltaTime);
 
 
-	
+		}
 	}
 }
