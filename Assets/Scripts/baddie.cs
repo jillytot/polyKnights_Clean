@@ -81,54 +81,46 @@ public class baddie : MonoBehaviour {
 	bool startAttacking;
 
 	//new targetting stuff;
-	public static GameObject[] getPlayers;
 	public static Vector3[] playerPositions;
-	public static Transform[] referenceTransforms;
 	float[] myTargetDistances;
 	int selectTarget;
 	bool refreshTarget;
 	public float refreshTargetRate = 1;
 	Transform lastTarget;
 
+	bool triggerRefresh;
 
 	
 	void Awake () {
 
 		//find Walker game objects
+	//TODO move this reference to gameMaster as well.
 		walkerObjects = GameObject.FindWithTag("Walker"); 
 
-		//Find player game objects
-		getPlayers = GameObject.FindGameObjectsWithTag("Player");
-		referenceTransforms = new Transform[getPlayers.Length]; //Create a reference to the transforms of the players
-		playerPositions = new Vector3[getPlayers.Length]; //used to for calculating enemy targets
-		myTargetDistances = new float[getPlayers.Length]; //distance to each target
-
-		for (int i = 0; i < getPlayers.Length; i++) {
-			
-			//store references to transforms
-			referenceTransforms[i] = getPlayers[i].GetComponent<Transform>();
-			
-			}
 		}
 
 	// Use this for initialization
 	void Start () {
 
+		playerPositions = new Vector3[gameMaster.getPlayers.Length]; //used to for calculating enemy targets
+		myTargetDistances = new float[gameMaster.getPlayers.Length]; //distance to each target
+
 		HP = maxHP; //initialize HP to start at Max HP
 		storeMat = enemyMat.renderer.material; //Store the default enemy mate for later
 		targetLocked = false;
-		//Vector3 myTarget = Vector3.zero;
 		attackReady = true;
 		attacking = false;
 		reloadArrow = false;
 		attackDone = false;
 		startAttacking = false;
 		refreshTarget = true;
+		triggerRefresh = false;
 
 		//Store reference to walkerScript
-
 		if (walkerObjects) {
+
 		checkWalker = walkerObjects.GetComponent<saveMe>();
+		
 		}
 	}
 	
@@ -147,6 +139,12 @@ public class baddie : MonoBehaviour {
 			refreshTarget = false;
 			lastTarget = findTarget(transform.position);
 
+			//melee enemies periodically refresh targets, but make sure they aren't currently doing an attack.
+//			if (meleeEnabled == true && attacking == false) {
+//
+//				StartCoroutine("refreshTargetBool");
+//
+//			}
 		}
 
 		//current target is the most recently assigned target
@@ -394,6 +392,13 @@ public class baddie : MonoBehaviour {
 			attackReady = true;
 			startAttacking = false;
 			
+		} 
+
+		//If not attacking, peridoically update your target.
+		if (triggerRefresh == false) {
+
+			triggerRefresh = true;
+			StartCoroutine("refreshTargetBool");
 		}
 	}
 
@@ -426,7 +431,7 @@ public class baddie : MonoBehaviour {
 	//returns transform of closest target to enemy
 	Transform findTarget (Vector3 myPos) {
 		
-		for (int i = 0; i < getPlayers.Length; i++) {
+		for (int i = 0; i < gameMaster.getPlayers.Length; i++) {
 			
 			if (i == 0) {
 
@@ -436,7 +441,7 @@ public class baddie : MonoBehaviour {
 			}
 
 			//get the position of each player
-			 playerPositions[i] = referenceTransforms[i].transform.position;
+			 playerPositions[i] = gameMaster.playerTransforms[i].transform.position;
 			
 			//Debug.Log("Player: " + (i + 1) + " is located at: " + playerPositions[i]);
 
@@ -449,21 +454,28 @@ public class baddie : MonoBehaviour {
 
 				//if the distance to the current position is shorter than the previous position, target is current position.
 				selectTarget = i;
+				//Debug.Log("Update target to: " + playerPositions[selectTarget] + "from previous target: " + playerPositions[i - 1]);
 				
 				}
 			}
 		
-		var chosenTarget = referenceTransforms[selectTarget];
+		var chosenTarget = gameMaster.playerTransforms[selectTarget];
 		//print ("I CHOOSE YOU " + chosenTarget);
 		
-		return chosenTarget;
+		return chosenTarget; 
 		
 	}
 
 	IEnumerator refreshTargetBool () {
 
 		yield return new WaitForSeconds(Random.Range( refreshTargetRate *0.75f, refreshTargetRate * 1.25f) );
-		refreshTarget = true;
+
+		if (attacking == false) {
+
+			refreshTarget = true;
+		}
+
+		triggerRefresh = false;
 
 	}
 }
