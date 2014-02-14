@@ -32,10 +32,7 @@ public class gameMaster : MonoBehaviour {
 		Debug.Log ("Number of players = " + playerCount);
 		Debug.Log ("Walker Count = " + walkerCount + " & Together they have: " + walkerHealth + "hp");
 
-		foreach (GameObject player in players) {
-
-
-			}
+	
 		}
 
 

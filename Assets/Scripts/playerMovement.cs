@@ -43,12 +43,6 @@ public class playerMovement : damageControl {
 
 	}
 	
-
-//	void FixedUpdate () {
-//	
-//	}
-
-
 	void Update() {
 
 		//Get axis values for calculating movement

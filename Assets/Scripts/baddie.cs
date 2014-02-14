@@ -33,7 +33,7 @@ public class baddie : MonoBehaviour {
 
 	//Variables for finding targets
 
-	GameObject playerObjects; //Store player objects for reference
+
 	Vector3 storePlayerPos; //position of player(s)
 	
 	GameObject walkerObjects; //Eventually this might need to be an array of objects, but from here we can get any component we need from the Walker;
@@ -83,21 +83,32 @@ public class baddie : MonoBehaviour {
 	//new targetting stuff;
 	public static GameObject[] getPlayers;
 	public static Vector3[] playerPositions;
+	public static Transform[] referenceTransforms;
 	float[] myTargetDistances;
 	int selectTarget;
 	bool refreshTarget;
 	public float refreshTargetRate = 1;
+	Transform lastTarget;
+
 
 	
 	void Awake () {
 
+		//find Walker game objects
 		walkerObjects = GameObject.FindWithTag("Walker"); 
-		playerObjects = GameObject.FindWithTag("Player");
 
+		//Find player game objects
 		getPlayers = GameObject.FindGameObjectsWithTag("Player");
-		playerPositions = new Vector3[getPlayers.Length];
-		myTargetDistances = new float[getPlayers.Length];
+		referenceTransforms = new Transform[getPlayers.Length]; //Create a reference to the transforms of the players
+		playerPositions = new Vector3[getPlayers.Length]; //used to for calculating enemy targets
+		myTargetDistances = new float[getPlayers.Length]; //distance to each target
 
+		for (int i = 0; i < getPlayers.Length; i++) {
+			
+			//store references to transforms
+			referenceTransforms[i] = getPlayers[i].GetComponent<Transform>();
+			
+			}
 		}
 
 	// Use this for initialization
@@ -106,7 +117,7 @@ public class baddie : MonoBehaviour {
 		HP = maxHP; //initialize HP to start at Max HP
 		storeMat = enemyMat.renderer.material; //Store the default enemy mate for later
 		targetLocked = false;
-		Vector3 myTarget = Vector3.zero;
+		//Vector3 myTarget = Vector3.zero;
 		attackReady = true;
 		attacking = false;
 		reloadArrow = false;
@@ -114,10 +125,8 @@ public class baddie : MonoBehaviour {
 		startAttacking = false;
 		refreshTarget = true;
 
+		//Store reference to walkerScript
 		checkWalker = walkerObjects.GetComponent<saveMe>();
-
-		//findTarget (transform.position);
-
 
 	}
 	
@@ -127,16 +136,19 @@ public class baddie : MonoBehaviour {
 
 		storeWalkerPos = walkerObjects.transform.position;
 
+		//if enemy requires a target search, go into the findTarget method
 		if (refreshTarget == true ) {
 
 			refreshTarget = false;
-			storePlayerPos = findTarget(transform.position);
+			lastTarget = findTarget(transform.position);
 
-		} 
+		}
 
-		storePlayerPos = storePlayerPos;
+		//current target is the most recently assigned target
+		storePlayerPos = lastTarget.transform.position;
 
-		//Kill the enemy if their HP reaches 0
+
+		//kill this game object if it's dead, you know, out of HPs
 		if (HP <= 0) {
 
 			Destroy(this.gameObject);
@@ -199,7 +211,7 @@ public class baddie : MonoBehaviour {
 
 		} else {
 
-			targetPosition = findTarget(transform.position);
+			targetPosition = storePlayerPos;
 			//targetPosition = storePlayerPos;
 			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
 
@@ -247,7 +259,7 @@ public class baddie : MonoBehaviour {
 		} else {
 
 			
-			myTarget = targetPosition = storePlayerPos + Vector3.up;
+			myTarget = storePlayerPos + Vector3.up;
 			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
 			
 		}
@@ -406,40 +418,38 @@ public class baddie : MonoBehaviour {
 		}
 	}
 
-	Vector3 findTarget (Vector3 myPos) {
-
-		//if (refreshTarget == true) {
+	//returns transform of closest target to enemy
+	Transform findTarget (Vector3 myPos) {
 		
 		for (int i = 0; i < getPlayers.Length; i++) {
 			
 			if (i == 0) {
-				
+
+				//start with the first transform
 				selectTarget = 0;
 				
 			}
+
+			//get the position of each player
+			 playerPositions[i] = referenceTransforms[i].transform.position;
 			
-			print(getPlayers[i]);
-			playerPositions[i] = getPlayers[i].GetComponent<Transform>().transform.position;
-			
-			Debug.Log("Player: " + (i + 1) + " is located at: " + playerPositions[i]);
-			
+			//Debug.Log("Player: " + (i + 1) + " is located at: " + playerPositions[i]);
+
+			//find the distance to each player from this enemy
 			var distanceOffset = myPos - playerPositions[i];
 			myTargetDistances[i] = distanceOffset.sqrMagnitude;
 			
-			//compare distance to all players, find the closest one
-			if (i > 0 && myTargetDistances[i] > myTargetDistances[i-1]) {
-				
-				selectTarget++;
+			//compare distance to all players, find the closest one 
+			if (i > 0 && myTargetDistances[i] < myTargetDistances[i-1]) {
+
+				//if the distance to the current position is shorter than the previous position, target is current position.
+				selectTarget = i;
 				
 				}
 			}
-
-			//refreshTarget = false;
-			//StartCoroutine("refreshTargetBool");
-		//}
 		
-		var chosenTarget = playerPositions[selectTarget];
-		print ("I CHOOSE YOU " + chosenTarget);
+		var chosenTarget = referenceTransforms[selectTarget];
+		//print ("I CHOOSE YOU " + chosenTarget);
 		
 		return chosenTarget;
 		
