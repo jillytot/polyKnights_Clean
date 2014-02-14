@@ -30,7 +30,7 @@ public class arrowBehavior : CustomBehaviour {
 		
 		// the direction is a little arrow pointing at the target point
 		Vector3 directionToTarget = (m_targetPoint - transform.position).normalized;
-		Debug.DrawRay(transform.position, directionToTarget * 4, Color.red, 5); // show it for 5 seconds
+		//Debug.DrawRay(transform.position, directionToTarget * 4, Color.red, 5); // show it for 5 seconds
 		m_velocity = directionToTarget * m_speed;
 
 		// computing the vertical velocity to make sure it stays in the air long enough to hit the target
@@ -40,6 +40,7 @@ public class arrowBehavior : CustomBehaviour {
 		m_velocity.y = 0.5f * Gravity * timeOfFlight + (m_targetPoint.y - transform.position.y)/timeOfFlight;
 
 		var target = Instantiate(targetMarker, m_targetPoint, Quaternion.identity);
+		Debug.DrawRay(transform.position, directionToTarget * Vector3.Distance(m_targetPoint, transform.position), Color.red, timeOfFlight); // show it for 5 seconds
 		Destroy(target, timeOfFlight);
 		Destroy (this.gameObject, timeOfFlight);
 
