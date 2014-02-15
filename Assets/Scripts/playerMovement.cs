@@ -46,6 +46,7 @@ public class playerMovement : damageControl {
 	string myJump = "Jump";
 
 
+
 	void Awake() {
 
 		myAnimation = GetComponentInChildren<Animator>(); //Get animation controller and assign it to this character
@@ -74,6 +75,14 @@ public class playerMovement : damageControl {
 		Debug.Log(controls.fire2);
 		Debug.Log(controls.fire3);
 		Debug.Log(controls.jump);
+
+//		Debug.Log(Input.GetJoystickNames());
+//
+//		for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
+//
+//			Debug.Log(Input.GetJoystickNames()[i]);
+//
+//		}
 
 
 	}
@@ -263,7 +272,6 @@ public class playerMovement : damageControl {
 
 		if (Input.GetButtonDown(myFire2) && nextAttack == true) {
 
-	
 			//Get facing direction, and charge forward quickly. 
 
 			//bool startCharge = false; 

@@ -43,6 +43,12 @@ public class gameMaster : MonoBehaviour {
 			
 		}
 
+		for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
+			
+			Debug.Log(Input.GetJoystickNames()[i]);
+			
+		}
+
 	
 		}
 
