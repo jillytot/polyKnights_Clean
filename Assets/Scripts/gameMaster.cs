@@ -14,8 +14,9 @@ public class gameMaster : MonoBehaviour {
 	public static GameObject[] walkers; //store references to Walker objects for all to access
 	public static int walkerCount; //Not sure if this will be needed, but good to have
 	public static int walkerHealth; //Tracking walker health. 
-	
 
+	public static bool multiplayer;
+	
 	void Awake () {
 
 		getPlayers = GameObject.FindGameObjectsWithTag ("Player");
@@ -24,6 +25,7 @@ public class gameMaster : MonoBehaviour {
 		playerCount = getPlayers.Length;
 		walkerCount = walkers.Length;
 
+		//hahah rewrite this
 		foreach (GameObject walker in walkers) {
 
 			walkerHealth += walker.GetComponent<damageControl>().myHP;

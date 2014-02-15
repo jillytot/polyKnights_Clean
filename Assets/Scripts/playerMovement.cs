@@ -35,6 +35,17 @@ public class playerMovement : damageControl {
 
 	CharacterController controller; //create instance of character controller
 
+	public playerNum thisPlayer;
+
+	Controls controls;
+	string myHorizontal = "Horizontal";
+	string myVertical = "Vertical";
+	string myFire1 = "Fire1";
+	string myFire2 = "Fire2";
+	string myFire3 = "Fire3";
+	string myJump = "Jump";
+
+
 	void Awake() {
 
 		myAnimation = GetComponentInChildren<Animator>(); //Get animation controller and assign it to this character
@@ -42,12 +53,36 @@ public class playerMovement : damageControl {
 		myRotation = transform.rotation;
 
 	}
+
+	void Start() {
+
+		//I HATE MONOBEHAVIOR
+
+		//controls = new playerControls.getControls(thisPlayer);
+
+		controls = playerControls.getControls(thisPlayer);
+		myHorizontal = controls.horizontal;
+		myVertical = controls.vertical;
+		myFire1 = controls.fire1;
+		myFire2 = controls.fire2;
+		myFire3 = controls.fire3;
+		myJump = controls.jump;
+
+		Debug.Log(controls.horizontal);
+		Debug.Log(controls.vertical);
+		Debug.Log(controls.fire1);
+		Debug.Log(controls.fire2);
+		Debug.Log(controls.fire3);
+		Debug.Log(controls.jump);
+
+
+	}
 	
 	void Update() {
 
 		//Get axis values for calculating movement
-		Horizontal = Input.GetAxis("Horizontal");
-		Vertical = Input.GetAxis("Vertical");
+		Horizontal = Input.GetAxis(myHorizontal);
+		Vertical = Input.GetAxis(myVertical);
 
 		if (moveDirection.sqrMagnitude > 0.0f) {
 
@@ -91,7 +126,7 @@ public class playerMovement : damageControl {
 			}
 
 		//How to jump!
-		if (Input.GetButtonDown("Jump")) {
+		if (Input.GetButtonDown(myJump)) {
 			
 			moveDirection.y = jumpSpeed;
 
@@ -102,7 +137,7 @@ public class playerMovement : damageControl {
 		} else {
 
 			//Air Control
-			//To do: This is messy, it needs to be cleaned up.
+			//TODO: This is messy, it needs to be cleaned up.
 			//Also, when you jump, you automatically face north for some reason when not giving any input. 
 			moveDirection.x = Horizontal;
 			moveDirection.z = Vertical;
@@ -147,10 +182,14 @@ public class playerMovement : damageControl {
 
 		}
 
-		//float posX = this.gameObject.transform.position.x;
-		//float posZ = this.gameObject.transform.position.z;
-		//playerPos = new Vector3(posX, 0, posZ);
 		playerPos = this.gameObject.transform.position;
+
+		Debug.Log(controls.horizontal);
+		Debug.Log(controls.vertical);
+		Debug.Log(controls.fire1);
+		Debug.Log(controls.fire2);
+		Debug.Log(controls.fire3);
+		Debug.Log(controls.jump);
 
 	}
 
@@ -192,7 +231,7 @@ public class playerMovement : damageControl {
 
 	void basicAttack () {
 
-		if (Input.GetButtonDown("Fire1") && nextAttack == true) {
+		if (Input.GetButtonDown(myFire1) && nextAttack == true) {
 			
 			//print ("attack that shit!");
 			
@@ -222,7 +261,7 @@ public class playerMovement : damageControl {
 
 		}
 
-		if (Input.GetButtonDown("Fire2") && nextAttack == true) {
+		if (Input.GetButtonDown(myFire2) && nextAttack == true) {
 
 	
 			//Get facing direction, and charge forward quickly. 
@@ -294,5 +333,12 @@ public class playerMovement : damageControl {
 		myChargeAttack.SetActive(false); //This is a prefab instance which must be assigned in the editor
 		nextAttack = true;
 		startCharge = false;
+	}
+
+	void blockingGrounded () {
+
+		//lock player rotation, slow down movement, resist attacks from direction you are blocking in
+		//play blocking animation
+
 	}
 }

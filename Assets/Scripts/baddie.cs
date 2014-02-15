@@ -139,12 +139,6 @@ public class baddie : MonoBehaviour {
 			refreshTarget = false;
 			lastTarget = findTarget(transform.position);
 
-			//melee enemies periodically refresh targets, but make sure they aren't currently doing an attack.
-//			if (meleeEnabled == true && attacking == false) {
-//
-//				StartCoroutine("refreshTargetBool");
-//
-//			}
 		}
 
 		//current target is the most recently assigned target
