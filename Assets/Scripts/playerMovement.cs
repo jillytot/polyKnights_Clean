@@ -57,8 +57,6 @@ public class playerMovement : damageControl {
 
 	void Start() {
 
-		//I HATE MONOBEHAVIOR
-
 		//controls = new playerControls.getControls(thisPlayer);
 
 		controls = playerControls.getControls(thisPlayer);
@@ -69,12 +67,12 @@ public class playerMovement : damageControl {
 		myFire3 = controls.fire3;
 		myJump = controls.jump;
 
-		Debug.Log(controls.horizontal);
-		Debug.Log(controls.vertical);
-		Debug.Log(controls.fire1);
-		Debug.Log(controls.fire2);
-		Debug.Log(controls.fire3);
-		Debug.Log(controls.jump);
+//		Debug.Log(controls.horizontal);
+//		Debug.Log(controls.vertical);
+//		Debug.Log(controls.fire1);
+//		Debug.Log(controls.fire2);
+//		Debug.Log(controls.fire3);
+//		Debug.Log(controls.jump);
 
 //		Debug.Log(Input.GetJoystickNames());
 //
@@ -193,12 +191,6 @@ public class playerMovement : damageControl {
 
 		playerPos = this.gameObject.transform.position;
 
-		Debug.Log(controls.horizontal);
-		Debug.Log(controls.vertical);
-		Debug.Log(controls.fire1);
-		Debug.Log(controls.fire2);
-		Debug.Log(controls.fire3);
-		Debug.Log(controls.jump);
 
 	}
 
