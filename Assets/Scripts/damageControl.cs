@@ -28,6 +28,7 @@ public class damageControl : MonoBehaviour {
 	
 	}
 
+	//rules for receiving damage
 	public void takeDamage (int attack) {
 
 		if (imHit == false) {
