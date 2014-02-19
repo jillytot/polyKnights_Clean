@@ -1,0 +1,85 @@
+fileFormatVersion: 2
+guid: c23e15d8480cb4301aab463016da963a
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: body
+    100004: Body_Manip
+    100006: L_arm
+    100008: L_arm_end
+    100010: L_Leg
+    100012: L_Leg_end
+    100014: polySurface15
+    100016: R_arm
+    100018: R_arm_end
+    100020: R_Leg
+    100022: R_Leg_end
+    400000: //RootNode
+    400002: body
+    400004: Body_Manip
+    400006: L_arm
+    400008: L_arm_end
+    400010: L_Leg
+    400012: L_Leg_end
+    400014: polySurface15
+    400016: R_arm
+    400018: R_arm_end
+    400020: R_Leg
+    400022: R_Leg_end
+    4300000: polySurface15
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: polySurface15
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .0500000007
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  userData: 

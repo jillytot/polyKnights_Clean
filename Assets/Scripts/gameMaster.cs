@@ -19,6 +19,7 @@ public class gameMaster : MonoBehaviour {
 	public static int walkerCount; //Not sure if this will be needed, but good to have
 	public static int walkerHealth; //Tracking walker health. 
 
+	public bool MultiplayOn;
 	public static bool multiplayer;
 
 	public delegate void getStatUpdate(); //Place holder for creating event
@@ -36,6 +37,8 @@ public class gameMaster : MonoBehaviour {
 		getDamage = new damageControl[getPlayers.Length];
 		playerCount = getPlayers.Length;
 		walkerCount = walkers.Length;
+
+		if (MultiplayOn == true) {multiplayer = true;} else {multiplayer = false;}
 
 		//hahah rewrite this
 		foreach (GameObject walker in walkers) {

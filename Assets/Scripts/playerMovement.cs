@@ -15,7 +15,6 @@ public class playerMovement : damageControl {
 	public GameObject myChargeAttack; //Controls Charge Attack
 	public float attackSpeed = 0.2F; //used as buffer time before next attack;
 	bool nextAttack = true; //returns true when the player is ready to do their next atttack
-	//bool attackDone = true;
 
 	bool charging = false; //Triggers Charging
 	public float chargeSpeed = 100.00f; //Rate at which you charge
@@ -37,6 +36,8 @@ public class playerMovement : damageControl {
 
 	public playerNum thisPlayer;
 
+
+	//initialize controls for the player
 	Controls controls;
 	string myHorizontal = "Horizontal";
 	string myVertical = "Vertical";
@@ -57,32 +58,11 @@ public class playerMovement : damageControl {
 
 	void Start() {
 
-		//controls = new playerControls.getControls(thisPlayer);
+		if (gameMaster.multiplayer == true) {
 
-		controls = playerControls.getControls(thisPlayer);
-		myHorizontal = controls.horizontal;
-		myVertical = controls.vertical;
-		myFire1 = controls.fire1;
-		myFire2 = controls.fire2;
-		myFire3 = controls.fire3;
-		myJump = controls.jump;
-
-//		Debug.Log(controls.horizontal);
-//		Debug.Log(controls.vertical);
-//		Debug.Log(controls.fire1);
-//		Debug.Log(controls.fire2);
-//		Debug.Log(controls.fire3);
-//		Debug.Log(controls.jump);
-
-//		Debug.Log(Input.GetJoystickNames());
-//
-//		for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
-//
-//			Debug.Log(Input.GetJoystickNames()[i]);
-//
-//		}
-
-
+			getMyControls();
+		
+		}
 	}
 	
 	void Update() {
@@ -341,4 +321,32 @@ public class playerMovement : damageControl {
 		//play blocking animation
 
 	}
+
+	public void getMyControls () {
+
+		controls = playerControls.getControls(thisPlayer);
+		myHorizontal = controls.horizontal;
+		myVertical = controls.vertical;
+		myFire1 = controls.fire1;
+		myFire2 = controls.fire2;
+		myFire3 = controls.fire3;
+		myJump = controls.jump;
+
+		//		Debug.Log(controls.horizontal);
+		//		Debug.Log(controls.vertical);
+		//		Debug.Log(controls.fire1);
+		//		Debug.Log(controls.fire2);
+		//		Debug.Log(controls.fire3);
+		//		Debug.Log(controls.jump);
+		
+		//		Debug.Log(Input.GetJoystickNames());
+		//
+		//		for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
+		//
+		//			Debug.Log(Input.GetJoystickNames()[i]);
+		//
+		//		}
+
+	}
+	
 }
