@@ -50,10 +50,10 @@ public class damageControl : MonoBehaviour {
 			Debug.Log("You are already deeeaaadd!");
 			imDead = true;
 
-//			if (imDead == true && this.gameObject.CompareTag("Player")) {
-//
-//				Debug.Log("this player is now dead");
-//			}
+		} else {
+
+			imDead = false;
+
 		}
 
 		if (myHP < 0) {

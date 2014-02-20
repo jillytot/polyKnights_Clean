@@ -237,7 +237,7 @@ public class playerMovement : damageControl {
 
 			myAudio.PlayOneShot(mySounds[1]);
 
-			Debug.Log("Enable Attack");
+			//Debug.Log("Enable Attack");
 			myAttack.SetActive(true); //This is a prefab instance which must be assigned in the editor
 			myAnimation.SetBool("attacking", true);
 			nextAttack = false;
