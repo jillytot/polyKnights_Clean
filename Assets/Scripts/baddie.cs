@@ -425,12 +425,14 @@ public class baddie : MonoBehaviour {
 	//returns transform of closest target to enemy
 	Transform findTarget (Vector3 myPos) {
 
+		//default value for target
 		var closestIndex = -1;
 		
 		for (int i = 0; i < gameMaster.getPlayers.Length; i++) {
 
 			if (gameMaster.getDamage[i].myHP < 1) {
 
+				//This is super useful
 				continue;
 
 			}
@@ -468,6 +470,8 @@ public class baddie : MonoBehaviour {
 		selectTarget = closestIndex;
 
 		}
+
+		//This will probably still need further refinment
 		var chosenTarget = gameMaster.playerTransforms[selectTarget];
 		//print ("I CHOOSE YOU " + chosenTarget);
 		
