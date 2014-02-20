@@ -32,6 +32,8 @@ public class playerMovement : damageControl {
 
 	Animator myAnimation; // Animation controller
 
+	bool triggerDeath;
+
 	CharacterController controller; //create instance of character controller
 
 	public playerNum thisPlayer;
@@ -53,6 +55,7 @@ public class playerMovement : damageControl {
 		myAnimation = GetComponentInChildren<Animator>(); //Get animation controller and assign it to this character
 		controller = GetComponent<CharacterController>();
 		myRotation = transform.rotation;
+		triggerDeath = false;
 
 	}
 
@@ -71,11 +74,18 @@ public class playerMovement : damageControl {
 		Horizontal = Input.GetAxis(myHorizontal);
 		Vertical = Input.GetAxis(myVertical);
 
+		if (imDead == true) {
+
+			playerDeath();
+
+
+		} else {
+
 		if (moveDirection.sqrMagnitude > 0.0f) {
 
 			lastMoveDirection = moveDirection;
 
-		}
+		} 
 
 		//Modifies speed based on axis input
 		newSpeed = speedMod();
@@ -150,6 +160,7 @@ public class playerMovement : damageControl {
 				}  else {
 					
 					myAnimation.SetBool ("Run", false); 
+
 					
 				}
 			}
@@ -167,6 +178,7 @@ public class playerMovement : damageControl {
 
 			controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
 
+			}
 		}
 
 		playerPos = this.gameObject.transform.position;
@@ -346,6 +358,29 @@ public class playerMovement : damageControl {
 		//			Debug.Log(Input.GetJoystickNames()[i]);
 		//
 		//		}
+
+	}
+
+	void playerDeath () {
+
+		//trigger death animation when you die...
+		if (triggerDeath == false) {
+
+			//myAnimation.SetBool("imDead", true);
+
+			myAnimation.Play("imDead");
+			//cancel all attacks
+			myAttack.SetActive(false);
+			myChargeAttack.SetActive(false);
+			nextAttack = true;
+			startCharge = false;
+			triggerDeath = true;
+
+		}
+
+		//make the axis input zero so the player can't move. 
+		Horizontal = 0;
+		Vertical = 0;
 
 	}
 	

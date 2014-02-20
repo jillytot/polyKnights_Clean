@@ -424,14 +424,21 @@ public class baddie : MonoBehaviour {
 
 	//returns transform of closest target to enemy
 	Transform findTarget (Vector3 myPos) {
+
+		var closestIndex = -1;
 		
 		for (int i = 0; i < gameMaster.getPlayers.Length; i++) {
-			
-			if (i == 0) {
 
-				//start with the first transform
-				selectTarget = 0;
-				
+			if (gameMaster.getDamage[i].myHP < 1) {
+
+				continue;
+
+			}
+			
+			if (closestIndex == -1) {
+
+				closestIndex = i;
+		
 			}
 
 			//get the position of each player
@@ -442,17 +449,25 @@ public class baddie : MonoBehaviour {
 			//find the distance to each player from this enemy
 			var distanceOffset = myPos - playerPositions[i];
 			myTargetDistances[i] = distanceOffset.sqrMagnitude;
+
 			
-			//compare distance to all players, find the closest one 
-			if (i > 0 && myTargetDistances[i] < myTargetDistances[i-1]) {
+			//check targets to see if their dead... 
+			if (i > 0 &&   myTargetDistances[i] < myTargetDistances[closestIndex]) {
+
+				//comare distances to targets
 
 				//if the distance to the current position is shorter than the previous position, target is current position.
-				selectTarget = i;
+				closestIndex = i;
 				//Debug.Log("Update target to: " + playerPositions[selectTarget] + "from previous target: " + playerPositions[i - 1]);
-				
+					
 				}
 			}
-		
+
+		if (closestIndex >= 0) {
+
+		selectTarget = closestIndex;
+
+		}
 		var chosenTarget = gameMaster.playerTransforms[selectTarget];
 		//print ("I CHOOSE YOU " + chosenTarget);
 		

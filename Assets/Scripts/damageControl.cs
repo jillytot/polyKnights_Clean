@@ -12,7 +12,7 @@ public class damageControl : MonoBehaviour {
 	public Material hitMat; // this is the material used for when i take damage
 	public Material storeMat; //used to store my default material
 
-	bool imDead;
+	public bool imDead;
 	
 	// Use this for initialization
 	void Start () {
@@ -50,10 +50,16 @@ public class damageControl : MonoBehaviour {
 			Debug.Log("You are already deeeaaadd!");
 			imDead = true;
 
-			if (imDead == true && this.gameObject.CompareTag("Player")) {
+//			if (imDead == true && this.gameObject.CompareTag("Player")) {
+//
+//				Debug.Log("this player is now dead");
+//			}
+		}
 
-				Debug.Log("this player is now dead");
-			}
+		if (myHP < 0) {
+
+			myHP = 0;
+
 		}
 	}
 
