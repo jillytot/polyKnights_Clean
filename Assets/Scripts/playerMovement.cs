@@ -38,6 +38,9 @@ public class playerMovement : damageControl {
 
 	public playerNum thisPlayer;
 
+	AudioSource myAudio;
+	public AudioClip[] mySounds;
+
 
 	//initialize controls for the player
 	Controls controls;
@@ -56,6 +59,7 @@ public class playerMovement : damageControl {
 		controller = GetComponent<CharacterController>();
 		myRotation = transform.rotation;
 		triggerDeath = false;
+		myAudio = this.gameObject.GetComponent<AudioSource>();
 
 	}
 
@@ -126,6 +130,7 @@ public class playerMovement : damageControl {
 		if (Input.GetButtonDown(myJump)) {
 			
 			moveDirection.y = jumpSpeed;
+					myAudio.PlayOneShot(mySounds[0]);
 
 			
 			}
@@ -230,6 +235,8 @@ public class playerMovement : damageControl {
 			
 			//Enable the attack graphic & the corresponding attack animation.
 
+			myAudio.PlayOneShot(mySounds[1]);
+
 			Debug.Log("Enable Attack");
 			myAttack.SetActive(true); //This is a prefab instance which must be assigned in the editor
 			myAnimation.SetBool("attacking", true);
@@ -262,6 +269,7 @@ public class playerMovement : damageControl {
 			charging = true;
 
 			if (startCharge == false) {
+				myAudio.PlayOneShot(mySounds[2]);
 
 				if (moveDirection.sqrMagnitude == 0) {
 

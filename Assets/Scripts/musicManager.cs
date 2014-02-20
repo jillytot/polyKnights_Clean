@@ -5,11 +5,13 @@ public class musicManager : MonoBehaviour {
 
 	public AudioClip[] mySongs;
 	AudioSource playSong;
+	bool newSong;
 
 	void Awake () {
 
 		DontDestroyOnLoad(this.gameObject);
 		playSong = this.gameObject.GetComponent<AudioSource>();
+		newSong = true;
 
 
 	}
@@ -22,9 +24,13 @@ public class musicManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (Application.loadedLevelName == "2p_Test") {
+		if (Application.loadedLevelName == "dontDieTest" && newSong == true) {
 
 			Debug.Log("Play a new song yo!");
+			playSong.clip = mySongs[1];
+			playSong.Play();
+			playSong.volume = 0.5f;
+			newSong = false;
 
 		}
 	}
