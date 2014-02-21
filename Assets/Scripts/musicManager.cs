@@ -24,7 +24,7 @@ public class musicManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (Application.loadedLevelName == "dontDieTest" && newSong == true) {
+		if (Application.loadedLevelName == "testLevel" && newSong == true) {
 
 			Debug.Log("Play a new song yo!");
 			playSong.clip = mySongs[1];
