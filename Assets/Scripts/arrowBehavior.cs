@@ -14,14 +14,17 @@ public class arrowBehavior : CustomBehaviour {
 	Vector3 m_targetPoint;
 	Vector3 m_velocity;
 	float accuracy;
-
+	int myAttack;
+	
 	public GameObject targetMarker;
 	
 	// force of gravity -- 9.8 is the "real" value, but setting this higher
 	// makes the arrows arc up more and come down faster, looks kinda cool
 	public float Gravity = 9.8f;
 	
-	public void ShootSelf(Vector3 myTarget, float speed) {
+	public void ShootSelf(Vector3 myTarget, float speed, int attackPow) {
+
+		myAttack = attackPow;
 	
 		accuracy = 4.0f;
 		m_targetPoint = new Vector3 (myTarget.x + Random.Range(-accuracy,accuracy), myTarget.y , myTarget.z + Random.Range(-accuracy, accuracy));
@@ -88,8 +91,13 @@ public class arrowBehavior : CustomBehaviour {
 	}
 	
 	void OnTriggerEnter (Collider other) {
-		
-		
-		
+
+		var hitPlayer = other.collider.gameObject.GetComponent<playerMovement>();
+
+		if (hitPlayer) {
+
+			hitPlayer.takeDamage(myAttack);
+
+		}
 	}
 }

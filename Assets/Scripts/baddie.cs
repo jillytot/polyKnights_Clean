@@ -291,7 +291,7 @@ public class baddie : MonoBehaviour {
 		
 			var arrow = (GameObject)Instantiate(myArrow, transform.position, Quaternion.identity);
 			var arrowComponent = arrow.GetComponent<arrowBehavior>();
-			arrowComponent.ShootSelf(myTarget, arrowSpeed );
+			arrowComponent.ShootSelf(myTarget, arrowSpeed, attackPower );
 
 			}
 		}
