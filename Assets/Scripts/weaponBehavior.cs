@@ -18,6 +18,7 @@ public class weaponBehavior : MonoBehaviour {
 	void OnTriggerEnter (Collider other) {
 
 		var doDamage = other.GetComponent<baddie>();
+		var revivePlayer = other.GetComponent<playerMovement>();
 
 		if (doDamage) {
 
@@ -25,6 +26,12 @@ public class weaponBehavior : MonoBehaviour {
 			print ("enemyHit");
 			doDamage.HP -= weaponDamage;
 			doDamage.imHit = true;
+
+		}
+
+		if (revivePlayer && revivePlayer.imDead == true) {
+
+			revivePlayer.reviveMe();
 
 		}
 	}

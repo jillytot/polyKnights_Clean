@@ -51,6 +51,9 @@ public class playerMovement : damageControl {
 	string myFire3 = "Fire3";
 	string myJump = "Jump";
 
+	public int reviveCounter;
+	bool reviveDelay;
+
 
 
 	void Awake() {
@@ -60,6 +63,7 @@ public class playerMovement : damageControl {
 		myRotation = transform.rotation;
 		triggerDeath = false;
 		myAudio = this.gameObject.GetComponent<AudioSource>();
+		reviveDelay = false;
 
 	}
 
@@ -390,6 +394,37 @@ public class playerMovement : damageControl {
 		Horizontal = 0;
 		Vertical = 0;
 
+	}
+
+	public void reviveMe () {
+
+		if (reviveDelay == false) {
+
+			reviveCounter -= 1;
+			myMat.renderer.material = healMat;
+			reviveDelay = true;
+			StartCoroutine("reviveMat");
+
+		}
+		
+		if (reviveCounter < 1) {
+
+			myHP = myMaxHp;
+			imDead = false;
+			triggerDeath = false;
+			reviveCounter = 10;
+			myAnimation.Play("idle");
+
+		}
+	}
+
+	IEnumerator reviveMat () { 
+		
+		yield return new WaitForSeconds(0.1f);
+		reviveDelay = false;
+		myMat.renderer.material = storeMat;
+		Debug.Log("Time to get hit again!");
+		
 	}
 	
 }

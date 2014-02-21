@@ -11,6 +11,7 @@ public class damageControl : MonoBehaviour {
 	public GameObject myMat; //access the gameobject that my material
 	public Material hitMat; // this is the material used for when i take damage
 	public Material storeMat; //used to store my default material
+	public Material healMat; //show this when getting healed
 
 	public bool imDead;
 	
@@ -71,6 +72,4 @@ public class damageControl : MonoBehaviour {
 		Debug.Log("Time to get hit again!");
 
 	}
-
-
 }
