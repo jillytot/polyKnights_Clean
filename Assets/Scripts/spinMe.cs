@@ -4,9 +4,9 @@ using System.Collections;
 public class spinMe : MonoBehaviour {
 
 	//Rotate objects along the following axis
-	public int x;
-	public int y;
-	public int z;
+	public float x;
+	public float y;
+	public float z;
 
 	//set speed for rotation
 	public float rotationSpeed;
