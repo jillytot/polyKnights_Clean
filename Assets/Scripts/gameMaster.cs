@@ -28,6 +28,7 @@ public class gameMaster : MonoBehaviour {
 	
 	void Awake () {
 
+		//initializing values
 		getPlayers = GameObject.FindGameObjectsWithTag ("Player");
 		walkers = GameObject.FindGameObjectsWithTag ("Walker");
 		playerTransforms = new Transform[getPlayers.Length]; //Create a reference to the transforms of the players

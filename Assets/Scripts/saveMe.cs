@@ -8,6 +8,7 @@ public class saveMe : damageControl {
 	public bool triggerSafe; //temp bool for triggering safe
 	Vector3 myPos; // stores Walker's position
 	Quaternion myRot; //store Walker rotation
+	public static int healAmount = 1;
 
 	public float mySpeed = 5f; //Walker speed
 

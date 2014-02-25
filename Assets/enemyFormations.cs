@@ -7,7 +7,8 @@ public class enemyFormations : MonoBehaviour {
 	public float distanceMag = 10;
 	bool showEnemies = false;
 
-	// Use this for initialization
+	// Used to spawn groups of enemies.
+	//at the start, disable all the children so they don't all load into the game at once.
 	void Start () {
 
 		foreach (Transform child in transform) {
@@ -22,6 +23,7 @@ public class enemyFormations : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		//once the enemy group is close enough to the screen, enable them.
 		var offsetToWalker = this.gameObject.transform.position.z - WalkerPos.position.z;
 
 		if (offsetToWalker < distanceMag && showEnemies == false) {

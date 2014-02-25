@@ -12,6 +12,7 @@ public class damageControl : MonoBehaviour {
 	public Material hitMat; // this is the material used for when i take damage
 	public Material storeMat; //used to store my default material
 	public Material healMat; //show this when getting healed
+	public GameObject healingEffect; //the healing effect that is active while the player is being healed. 
 
 	public bool imDead;
 	

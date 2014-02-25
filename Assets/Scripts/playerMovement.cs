@@ -32,11 +32,15 @@ public class playerMovement : damageControl {
 
 	Animator myAnimation; // Animation controller
 
-	bool triggerDeath;
+	bool triggerDeath; //Starts the dying process
+	bool healActive; //while true, the player is being healed.
+	bool triggerHeal; //starts the healing process
 
 	CharacterController controller; //create instance of character controller
 
 	public playerNum thisPlayer;
+
+
 
 	AudioSource myAudio;
 	public AudioClip[] mySounds;
@@ -64,6 +68,8 @@ public class playerMovement : damageControl {
 		triggerDeath = false;
 		myAudio = this.gameObject.GetComponent<AudioSource>();
 		reviveDelay = false;
+		healActive = false;
+		triggerHeal = false;
 
 	}
 
@@ -171,12 +177,18 @@ public class playerMovement : damageControl {
 					myAnimation.SetBool ("Run", false); 
 
 					
+					}
 				}
 			}
-		}
+
+			if (imDead == false && triggerDeath == false) {
+
+				healingTime();
+
+			}
+
 
 		//Controls Gravity
-
 		moveDirection.y -= gravity * Time.deltaTime;
 
 		if (charging == false) {
@@ -195,9 +207,7 @@ public class playerMovement : damageControl {
 
 	}
 
-	//void OnTriggerEnter (Collider other) {
 
-	//}
 
 
 
@@ -396,17 +406,22 @@ public class playerMovement : damageControl {
 
 	}
 
+	//Current revive player behavior: Living player hits a dead player with an attack multple times to revive them to full Health. 
+	//This is obviously temp...
 	public void reviveMe () {
 
+		//every time the player gits hit, wait a little bit before before they can get hit again
 		if (reviveDelay == false) {
 
+			//decrement the revive counter each time a hit registers. 
 			reviveCounter -= 1;
-			myMat.renderer.material = healMat;
+			myMat.renderer.material = healMat;  //flash the heal material to indicate the player is being healed
 			reviveDelay = true;
-			StartCoroutine("reviveMat");
+			StartCoroutine("reviveMat"); //this counter resets the reviveDelay bool so the player can get hit again
 
 		}
-		
+
+		//if the revive counter counts down all the way, revive the player.
 		if (reviveCounter < 1) {
 
 			myHP = myMaxHp;
@@ -418,13 +433,76 @@ public class playerMovement : damageControl {
 		}
 	}
 
+	//This resets values for the reviveMe function
 	IEnumerator reviveMat () { 
 		
 		yield return new WaitForSeconds(0.1f);
 		reviveDelay = false;
-		myMat.renderer.material = storeMat;
+		myMat.renderer.material = storeMat; //returns the player material to the normal material
 		Debug.Log("Time to get hit again!");
 		
 	}
+
+	void OnTriggerEnter (Collider other) {
+
+		var safeZone = other.collider.GetComponent<safeZone>();
+
+		if (safeZone) {
+
+			healActive = true;
+			Debug.Log("I am now in the safe zone");
+
+		}
+	
+	}
+
+	void OnTriggerExit (Collider other) {
+
+		var notSafe = other.collider.GetComponent<safeZone>();
+
+		if (notSafe) {
+
+			healActive = false;
+			Debug.Log("I am not safe anymore!");
+			healingEffect.SetActive(false);
+
+		}
+
+	}
+
+	void healingTime () {
+
+		if (healActive == true) {
+
+			healingEffect.SetActive(true);
+
+		}
+
+		if (healActive == true && triggerHeal == false) {
+
+			triggerHeal = true;
+			StartCoroutine("healing");
+
+		}
+
+	}
+
+	IEnumerator healing () {
+
+
+
+		myHP += saveMe.healAmount;
+
+		if (myHP > myMaxHp) {
+
+			myHP = myMaxHp;
+
+		}
+
+		yield return new WaitForSeconds(1);
+		triggerHeal = false;
+	}
+
+
 	
 }
