@@ -3,6 +3,8 @@ using System.Collections;
 
 public class safeZone : MonoBehaviour {
 
+	public static float torchPower = 10;
+
 	// Use this for initialization
 	void Start () {
 	

@@ -90,6 +90,9 @@ public class baddie : MonoBehaviour {
 
 	bool triggerRefresh;
 
+	//public GameObject ember;
+	public int emberValue = 1;
+
 	
 	void Awake () {
 
@@ -147,6 +150,19 @@ public class baddie : MonoBehaviour {
 
 		//kill this game object if it's dead, you know, out of HPs
 		if (HP <= 0) {
+
+		
+
+			int randomNum = Random.Range(1,100);
+			if (randomNum < 15) {
+
+				//TODO: THIS IS NOT THE SAFEST WAY TO IMPLEMENT THIS! MAKE A LIBRARY!
+				//drop embers sometimes upon death
+				var spawnPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+				var myEmber = (GameObject)Instantiate(Resources.Load("ember"), spawnPosition, transform.rotation);
+				var emberComponent = myEmber.GetComponent<emberBehavior>();
+				emberComponent.emberValue = emberValue;
+			}
 
 			Destroy(this.gameObject);
 
