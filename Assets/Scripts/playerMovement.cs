@@ -447,7 +447,8 @@ public class playerMovement : damageControl {
 
 		var safeZone = other.collider.GetComponent<safeZone>();
 
-		if (safeZone) {
+		//check to see if the safe zone is present and active
+		if (safeZone && safeZone.disableProtection == false) {
 
 			healActive = true;
 			Debug.Log("I am now in the safe zone");
@@ -485,6 +486,12 @@ public class playerMovement : damageControl {
 
 		}
 
+		if (safeZone.disableProtection == true) {
+
+			healActive = false;
+			Debug.Log("I am not safe anymore!");
+			healingEffect.SetActive(false);
+		}
 	}
 
 	IEnumerator healing () {
