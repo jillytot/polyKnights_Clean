@@ -14,6 +14,7 @@ public class safeZone : MonoBehaviour {
 	//for controlling the size of the safeZone based off Torch Power
 	Vector3 initialScale;
 	public float torchScalar = 0.1f;
+	public float scalingSpeed = 1.0f;
 
 	//The max and minimum size of the torch safeZone
 	public float zoneMax = 20;
@@ -21,6 +22,7 @@ public class safeZone : MonoBehaviour {
 
 	public GameObject[] protectSphere;
 	public static bool disableProtection;
+	public float disableMin = 5.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -42,17 +44,17 @@ public class safeZone : MonoBehaviour {
 			StartCoroutine("burnTorch");
 		}
 
-		//stop the torch area from shrinking beyond a certain threshold.
+		//the safezone has a min and max size, and grows and shrinks based on the torch power
 		if (torchPower > zoneMin && torchPower < zoneMax) {
 
-			//TODO: lerp to new size
-			transform.localScale = new Vector3(initialScale.x * torchPower * torchScalar, initialScale.y * torchPower * torchScalar, initialScale.z * torchPower * torchScalar);
+			Vector3 rescale = new Vector3(initialScale.x * torchPower * torchScalar, initialScale.y * torchPower * torchScalar, initialScale.z * torchPower * torchScalar);
+			transform.localScale = Vector3.Slerp(transform.localScale, rescale, scalingSpeed * Time.deltaTime);
 	
 		}
 
 		//If the torch goes below a certain power threshold, then the safety zone should be disabled. 
 		//tIf the safety is off, then the torch walker will become vunerable. 
-		if (torchPower < zoneMin && disableProtection == false) {
+		if (torchPower < disableMin && disableProtection == false) {
 
 		    disableProtection = true;
 
@@ -63,7 +65,7 @@ public class safeZone : MonoBehaviour {
 			}
 		}
 
-			if (torchPower > zoneMin && disableProtection == true) {
+			if (torchPower > disableMin && disableProtection == true) {
 
 			for (int i = 0; i < protectSphere.Length; i ++) {
 

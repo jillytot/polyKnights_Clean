@@ -39,9 +39,7 @@ public class playerMovement : damageControl {
 	CharacterController controller; //create instance of character controller
 
 	public playerNum thisPlayer;
-
-
-
+	
 	AudioSource myAudio;
 	public AudioClip[] mySounds;
 
@@ -207,10 +205,6 @@ public class playerMovement : damageControl {
 
 	}
 
-
-
-
-
 	//Thank Alex Austin for making this work!
 	//This controls the speed while using a radial axis analogue stick so that it's constant in any degree at any velocity
 	//With this method you don't need to normalize your movement vectors
@@ -365,21 +359,6 @@ public class playerMovement : damageControl {
 		myFire2 = controls.fire2;
 		myFire3 = controls.fire3;
 		myJump = controls.jump;
-
-		//		Debug.Log(controls.horizontal);
-		//		Debug.Log(controls.vertical);
-		//		Debug.Log(controls.fire1);
-		//		Debug.Log(controls.fire2);
-		//		Debug.Log(controls.fire3);
-		//		Debug.Log(controls.jump);
-		
-		//		Debug.Log(Input.GetJoystickNames());
-		//
-		//		for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
-		//
-		//			Debug.Log(Input.GetJoystickNames()[i]);
-		//
-		//		}
 
 	}
 

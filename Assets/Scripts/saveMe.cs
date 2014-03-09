@@ -30,6 +30,7 @@ public class saveMe : damageControl {
 
 
 
+
 		saveMePos = this.gameObject.transform.position;
 
 
@@ -52,6 +53,16 @@ public class saveMe : damageControl {
 
 		//eventually the Walker will need to stop when confronted with an obstical
 		transform.position += Vector3.forward * mySpeed * Time.deltaTime;
+
+		if (safeZone.disableProtection == true) {
+
+			safe = false;
+		
+		} else {
+
+			safe = true;
+
+		}
 	
 	}
 

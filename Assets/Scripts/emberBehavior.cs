@@ -17,8 +17,19 @@ public class emberBehavior : CustomBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		//get target location (walker)
-		myTarget = gameMaster.walkers[0];
+	
+		//Check to see if the walker is present
+		if (gameMaster.walkers.Length > 0) {
+
+			//get target location (walker)
+			myTarget = gameMaster.walkers[0];
+
+		} else { 
+
+			//If there are no walkers present, my target is this
+			myTarget = this.gameObject;
+
+		}
 
 		triggerCollect = false;
 	
@@ -52,7 +63,16 @@ public class emberBehavior : CustomBehaviour {
 					audio.PlayOneShot(getCollected);
 
 			}
+
 			triggerCollect = true;
+
+			//If no walker is present, the embers will give you HP instead...
+			if (gameMaster.walkers.Length == 0) {
+
+				collectMe.myHP += emberValue;
+				Destroy(this.gameObject);
+
+			}
 
 
 		}
