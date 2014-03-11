@@ -14,6 +14,7 @@ public class gameMaster : MonoBehaviour {
 	public static int[] playerMaxHP; // Stores the Max HP values for all players
 	public static playerNum[] playerNames; //Stores the player designation, i.e. player 1
 	public static damageControl[] getDamage; //temporarily am using this to try to reference the value for  HP so it updates properly
+	public static int[] killCount;
 
 	public static GameObject[] walkers; //store references to Walker objects for all to access
 	public static int walkerCount; //Not sure if this will be needed, but good to have
@@ -25,6 +26,8 @@ public class gameMaster : MonoBehaviour {
 	public delegate void getStatUpdate(); //Place holder for creating event
 	public static event getStatUpdate getPlayerStats; //place holder for creating event.
 	public static bool updateMyStats; //place holder for triggering the event. 
+
+	public static int[] playerIndexer;
 	
 	void Awake () {
 
@@ -38,6 +41,9 @@ public class gameMaster : MonoBehaviour {
 		getDamage = new damageControl[getPlayers.Length];
 		playerCount = getPlayers.Length;
 		walkerCount = walkers.Length;
+		killCount = new int[getPlayers.Length];
+		//playerIndexer = new int[getPlayers.Length];
+
 
 		if (MultiplayOn == true) {multiplayer = true;} else {multiplayer = false;}
 
@@ -64,17 +70,21 @@ public class gameMaster : MonoBehaviour {
 
 			playerNames[i] = getPlayers[i].GetComponent<playerMovement>().thisPlayer;
 			Debug.Log(playerNames[i] + " P" + (i + 1) + " HP: " + playerHP[i] + "/" + playerMaxHP[i]);
+
+			//playerIndexer[i] = i;
+
+		
 			
 		}
 
 	
 
 		//find names of controllers currently plugged in
-		for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
+		//for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
 			
-			Debug.Log(Input.GetJoystickNames()[i]);
+			//Debug.Log(Input.GetJoystickNames()[i]);
 			
-		}
+		//}
 
 	
 		}
@@ -94,6 +104,7 @@ public class gameMaster : MonoBehaviour {
 
 			playerHP[i] = getDamage[i].myHP;
 			playerMaxHP[i] = getDamage[i].myMaxHp;
+
 
 		}
 

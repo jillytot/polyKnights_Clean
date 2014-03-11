@@ -10,6 +10,7 @@ public class displayPlayerStats : MonoBehaviour {
 	public playerNum displayNum;
 	TextMesh displayText;
 	int statIndex;
+	int killCounter;
 
 	bool displayNothing;
 
@@ -33,6 +34,7 @@ public class displayPlayerStats : MonoBehaviour {
 
 				playerHP =  gameMaster.getDamage[i].myHP;
 				playerMaxHP = gameMaster.getDamage[i].myMaxHp;
+				killCounter = gameMaster.killCount[i];
 				statIndex = i;
 
 			} 
@@ -58,9 +60,11 @@ public class displayPlayerStats : MonoBehaviour {
 
 		} else { 
 
-		playerHP = gameMaster.playerHP[statIndex];
-		playerMaxHP = gameMaster.playerMaxHP[statIndex];
-		displayText.text  = showName + " " + playerHP + "/" + playerMaxHP + "hp";
+			playerHP = gameMaster.playerHP[statIndex];
+			playerMaxHP = gameMaster.playerMaxHP[statIndex];
+			killCounter = gameMaster.killCount[statIndex];
+
+			displayText.text  = showName + " " + playerHP + "/" + playerMaxHP + "hp" + "\n"  + "Kills: " + killCounter;
 
 		}
 	}

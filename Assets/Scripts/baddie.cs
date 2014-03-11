@@ -93,6 +93,8 @@ public class baddie : MonoBehaviour {
 	//public GameObject ember;
 	public int emberValue = 1;
 
+	public playerNum hitByPlayer;
+
 	
 	void Awake () {
 
@@ -151,8 +153,23 @@ public class baddie : MonoBehaviour {
 		//kill this game object if it's dead, you know, out of HPs
 		if (HP <= 0) {
 
-		
+			//add to kill count (pass player number to the object that is dead); hitByPlayer
+			var killIndex = 0;
 
+			for (int i = 0; i < gameMaster.playerNames.Length; i ++) {
+
+				if (gameMaster.playerNames[i] == hitByPlayer) {
+
+					killIndex = i;
+
+				}
+
+			}
+
+			gameMaster.killCount[killIndex] += 1;
+			Debug.Log(hitByPlayer + " has killed: " +  gameMaster.killCount[killIndex] + " Enemies");
+
+			//drop embers upon death
 			int randomNum = Random.Range(1,100);
 			if (randomNum < 15) {
 

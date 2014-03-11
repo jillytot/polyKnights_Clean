@@ -69,6 +69,7 @@ public class playerMovement : damageControl {
 		healActive = false;
 		triggerHeal = false;
 
+
 	}
 
 	void Start() {
@@ -478,10 +479,17 @@ public class playerMovement : damageControl {
 
 
 		myHP += saveMe.healAmount;
+	
 
 		if (myHP > myMaxHp) {
 
 			myHP = myMaxHp;
+
+		} else {
+
+			//If the torch flame is healing me, substract more energy from the torch
+			var healPenalty = safeZone.torchPower * saveMe.healAmount * 0.1f;
+			safeZone.torchPower -= healPenalty;
 
 		}
 
