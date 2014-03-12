@@ -11,7 +11,7 @@ public class saveMe : damageControl {
 	public static int healAmount = 1;
 
 	public float mySpeed = 5f; //Walker speed
-
+	
 	// Use this for initialization
 	void Awake () {
 
@@ -22,6 +22,7 @@ public class saveMe : damageControl {
 	void Start () {
 
 		triggerSafe = false;
+
 	
 	}
 	
@@ -48,8 +49,6 @@ public class saveMe : damageControl {
 			//Debug.Log ("Walker is not safe"); 
 
 		}
-
-		//print ("is derp happening?");
 
 		//eventually the Walker will need to stop when confronted with an obstical
 		transform.position += Vector3.forward * mySpeed * Time.deltaTime;

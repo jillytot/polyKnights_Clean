@@ -24,14 +24,21 @@ public class safeZone : MonoBehaviour {
 	public static bool disableProtection;
 	public float disableMin = 5.0f;
 
+	//public GameObject myWalker;
+	//public static int myWalkerHP;
+
+	void Awake () {
+
+		//myWalkerHP = myWalker.gameObject.GetComponent<saveMe>().myHP;
+
+	}
+
 	// Use this for initialization
 	void Start () {
 
 		decrementPower = true;
 		disableProtection = false;
 		initialScale = transform.localScale;
-
-		//protectSphere = new GameObject[protectSphere.Length];
 	
 	}
 	

@@ -18,7 +18,9 @@ public class gameMaster : MonoBehaviour {
 
 	public static GameObject[] walkers; //store references to Walker objects for all to access
 	public static int walkerCount; //Not sure if this will be needed, but good to have
-	public static int walkerHealth; //Tracking walker health. 
+	public static int walkerHealth; //Tracking total walker health (all walkers if applicable). 
+	public static int torchWalkerHP; //Tracking main walker Health
+	//public GameObject mainWalker;
 
 	public bool MultiplayOn;
 	public static bool multiplayer;
@@ -54,8 +56,8 @@ public class gameMaster : MonoBehaviour {
 
 				}
 
-		Debug.Log ("Number of players = " + playerCount);
-		Debug.Log ("Walker Count = " + walkerCount + " & Together they have: " + walkerHealth + "hp");
+		//Debug.Log ("Number of players = " + playerCount);
+		//Debug.Log ("Walker Count = " + walkerCount + " & Together they have: " + walkerHealth + "hp");
 
 		//assign player transforms.
 		for (int i = 0; i < getPlayers.Length; i++) {
@@ -71,13 +73,14 @@ public class gameMaster : MonoBehaviour {
 			playerNames[i] = getPlayers[i].GetComponent<playerMovement>().thisPlayer;
 			Debug.Log(playerNames[i] + " P" + (i + 1) + " HP: " + playerHP[i] + "/" + playerMaxHP[i]);
 
-			//playerIndexer[i] = i;
-
-		
-			
 		}
 
-	
+//	if (mainWalker) {
+
+			//var getMainWalkerHP = mainWalker.gameObject.GetComponent<saveMe>();
+			//torchWalkerHP = getMainWalkerHP.myHP;
+
+
 
 		//find names of controllers currently plugged in
 		//for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
@@ -99,6 +102,7 @@ public class gameMaster : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 
 		for (int i = 0; i < getPlayers.Length; i++) {
 

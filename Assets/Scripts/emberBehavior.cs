@@ -79,9 +79,18 @@ public class emberBehavior : CustomBehaviour {
 
 		if (collected) { 
 
+			var targetWalkerHP = myTarget.gameObject.GetComponent<saveMe>();
 			//for each ember collected, add value to the torch power
 			safeZone.torchPower += emberValue;
+
+			if (targetWalkerHP.myHP < targetWalkerHP.myMaxHp) {
+
+				targetWalkerHP.myHP += emberValue;
+
+			}
+	
 			Debug.Log("Torch Power: " + safeZone.torchPower);
+			Debug.Log("Walker HP: " + targetWalkerHP.myHP);
 			Destroy(this.gameObject);
 
 		}
