@@ -95,12 +95,17 @@ public class baddie : MonoBehaviour {
 
 	public playerNum hitByPlayer;
 
+	//baddie variables
+	public Quaternion myRot;
+
 	
 	void Awake () {
 
 		//find Walker game objects
-	//TODO move this reference to gameMaster as well.
+		//TODO move this reference to gameMaster as well.
 		walkerObjects = GameObject.FindWithTag("Walker"); 
+
+		myRot = Quaternion.identity;
 
 		}
 
@@ -242,7 +247,6 @@ public class baddie : MonoBehaviour {
 		} else {
 
 			targetPosition = storePlayerPos;
-			//targetPosition = storePlayerPos;
 			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
 
 		}
@@ -259,7 +263,7 @@ public class baddie : MonoBehaviour {
 
 			}
 
-		//take x and z positions and smooth them out relative to the enemies current posotion (This will help stop the critter jitters)
+
 
 		if (attacking == true) {
 
@@ -267,14 +271,24 @@ public class baddie : MonoBehaviour {
 
 		else {
 
-		//Debug.Log("normal movement is happening");
-		float newXPos = Mathf.SmoothDamp(transform.position.x, groundTarget.x, ref smoothX, smoothTime);
-		float newZPos = Mathf.SmoothDamp(transform.position.z, groundTarget.z, ref smoothZ, smoothTime);
+			//take x and z positions and smooth them out relative to the enemies current posotion (This will help stop the critter jitters)
+			float newXPos = Mathf.SmoothDamp(transform.position.x, groundTarget.x, ref smoothX, smoothTime);
+			float newZPos = Mathf.SmoothDamp(transform.position.z, groundTarget.z, ref smoothZ, smoothTime);
 
-		groundTarget = new Vector3 (newXPos, groundTarget.y, newZPos);
+			groundTarget = new Vector3 (newXPos, groundTarget.y, newZPos);
+			transform.position = Vector3.MoveTowards(transform.position, groundTarget, movementSpeed * Time.deltaTime);
 
-		transform.position = Vector3.MoveTowards(transform.position, groundTarget, movementSpeed * Time.deltaTime);
-		
+			//rotate baddie towards their current target
+			foreach (Transform child in transform) {
+				
+				Vector3 targetXY = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
+				//Get the relative position of the target to look at
+				var targetRot = Quaternion.LookRotation(transform.position - targetXY);
+				this.gameObject.transform.rotation = transform.rotation.EaseTowards(targetRot, 0.2f);
+				
+				//method2: Get normalized vector of direction of motion. 
+				
+			}
 		}
 	}
 
@@ -375,6 +389,8 @@ public class baddie : MonoBehaviour {
 			holdPosition = targetPosition;
 
 		}
+
+
 
 
 

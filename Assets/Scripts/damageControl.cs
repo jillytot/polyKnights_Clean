@@ -14,7 +14,7 @@ public class damageControl : MonoBehaviour {
 	public Material healMat; //show this when getting healed
 	public GameObject healingEffect; //the healing effect that is active while the player is being healed. 
 
-	public bool imDead;
+	public bool imDead; //When you are dead, you are dead...
 	
 	// Use this for initialization
 	void Start () {
