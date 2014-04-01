@@ -27,6 +27,7 @@ public class playerMovement : damageControl {
 	float Vertical; //raw value for Vertical axis
 	
 	private Vector3 moveDirection = Vector3.zero; //initialize movement direction
+	private Vector3 inputMagnitude; //store axis input
 	private Vector3 lastMoveDirection; //record last movement.
 	public Vector3 playerPos;
 
@@ -87,6 +88,8 @@ public class playerMovement : damageControl {
 		Horizontal = Input.GetAxis(myHorizontal);
 		Vertical = Input.GetAxis(myVertical);
 
+		inputMagnitude =  new Vector3(Horizontal, 0, Vertical);
+
 		if (imDead == true) {
 
 			playerDeath();
@@ -94,9 +97,9 @@ public class playerMovement : damageControl {
 
 		} else {
 
-		if (moveDirection.sqrMagnitude > 0.0f) {
+		if (inputMagnitude.sqrMagnitude != 0.0f) {
 
-			lastMoveDirection = moveDirection;
+			lastMoveDirection = inputMagnitude;
 
 		} 
 
@@ -149,7 +152,6 @@ public class playerMovement : damageControl {
 
 			//Air Control
 			//TODO: This is messy, it needs to be cleaned up.
-			//Also, when you jump, you automatically face north for some reason when not giving any input. 
 			moveDirection.x = Horizontal;
 			moveDirection.z = Vertical;
 
@@ -163,13 +165,19 @@ public class playerMovement : damageControl {
 				
 			{
 				
-				if (moveDirection.sqrMagnitude > 0) { 
+				if (moveDirection.sqrMagnitude > 0.5f) { 
 					
 					myAnimation.SetBool("Run", true); //Changes avatar to running state
 					Vector3 lookatMoveDirection = new Vector3(	moveDirection.x, 0, moveDirection.z);
+
+				
+						if (inputMagnitude.sqrMagnitude > 0.5f) {
+
 					var targetRotation = Quaternion.LookRotation(lookatMoveDirection); //set target towards direction of motion
 					child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
 					myRotation = child.rotation;
+
+						}
 					
 				}  else {
 					
@@ -280,10 +288,11 @@ public class playerMovement : damageControl {
 			if (startCharge == false) {
 				myAudio.PlayOneShot(mySounds[2]);
 
-				if (moveDirection.sqrMagnitude == 0) {
+				if (inputMagnitude.sqrMagnitude == 0) {
 
 					Horizontal = lastMoveDirection.x;
 					Vertical = lastMoveDirection.z;
+
 
 				}
 
@@ -311,7 +320,14 @@ public class playerMovement : damageControl {
 				}
 
 				//This Vector3 is used for the charge attack
+
 				attackDirection = new Vector3 (Horizontal, 0, Vertical);
+				if (attackDirection.sqrMagnitude == 0) {
+
+					attackDirection = Vector3.forward;
+
+				}
+
 				startCharge = true;
 
 			}
