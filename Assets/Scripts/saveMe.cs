@@ -13,42 +13,64 @@ public class saveMe : damageControl {
 	float storeSpeed;
 	public GameObject myLight;
 	public GameObject myTorch;
+
+	CharacterController controller; //create instance of character controller
+
+	Vector3 moveDirection;
 	
 	// Use this for initialization
 	void Awake () {
 
 		safe = true;
 		storeSpeed = mySpeed;
+		controller = GetComponent<CharacterController>();
 
 	}
 
 	void Start () {
+
+
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+		//When im dead, stop all motion and put out the light. 
 		if (imDead == true) {
 
 			mySpeed = 0;
 			myLight.SetActive(false);
 			myTorch.SetActive(false);
 
-		}
+		} else { //If i am not dead, do all this other stuff
 
-		saveMePos = this.gameObject.transform.position;
+			mySpeed = storeSpeed;
 
-		//eventually the Walker will need to stop when confronted with an obstical
-		transform.position += Vector3.forward * mySpeed * Time.deltaTime;
+			//triggers the protective field around the walker. 
+			if (safeZone.disableProtection == true) {
 
-		if (safeZone.disableProtection == true) {
-
-			safe = false;
+				safe = false;
 		
-		} else {
+			} else {
 
-			safe = true;
+				safe = true;
+
+				}
+
+			if (controller.isGrounded) {
+				
+				//Get axis inputs and * by speed
+				moveDirection = Vector3.forward;
+				moveDirection *= mySpeed;
+
+			}
+
+			moveDirection.y -= playerMovement.gravity * Time.deltaTime;
+
+			//eventually the Walker will need to stop when confronted with an obstical
+			controller.Move(moveDirection * Time.deltaTime);
+			saveMePos = this.gameObject.transform.position;
 
 		}
 	
