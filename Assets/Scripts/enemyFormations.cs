@@ -7,6 +7,8 @@ public class enemyFormations : MonoBehaviour {
 	public float distanceMag = 10;
 	bool showEnemies = false;
 
+	public bool arenaMode = false;
+
 	// Used to spawn groups of enemies.
 	//at the start, disable all the children so they don't all load into the game at once.
 	void Start () {
@@ -24,6 +26,9 @@ public class enemyFormations : MonoBehaviour {
 	void Update () {
 
 		//once the enemy group is close enough to the screen, enable them.
+
+		if (arenaMode == false) {
+
 		var offsetToWalker = this.gameObject.transform.position.z - WalkerPos.position.z;
 
 		if (offsetToWalker < distanceMag && showEnemies == false) {
@@ -37,7 +42,19 @@ public class enemyFormations : MonoBehaviour {
 
 				child.gameObject.SetActive(true);
 
+				}
 			}
-		}
+		} else {
+
+			foreach (Transform child in transform)
+				
+			{
+				
+				child.gameObject.SetActive(true);
+				
+			}
+	} 
+
+
 	}
 }
