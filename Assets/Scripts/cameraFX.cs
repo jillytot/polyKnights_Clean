@@ -8,11 +8,18 @@ public class cameraFX : MonoBehaviour {
 	Vector3 offset;
 	float altitude;
 
-	public GameObject holdCamera;
-	public float zoomFloor;
-	public float zoomCeiling;
+	public float camSpeed = 1.0f;
+	public float zoomSpeed = 2.0f;
 
-	float camSpeed = 1.0f;
+	public float zoomFloor = 15f;
+	public float zoomCeiling = 50f;
+	public float zoomScaling = 1;
+
+	public GameObject holdCamera;
+	Vector3 zoomOffset;
+
+	float playerDistances;
+	Transform playerCenter;
 
 	bool arenaCam = false;
 
@@ -38,6 +45,12 @@ public class cameraFX : MonoBehaviour {
 
 				arenaCam = true;
 
+				//because i am using Transform instead of position, i have to create a transform for the camera to track for Multiplayer.
+				var centerObject = new GameObject("center");
+				centerObject.transform.position = playerTracking();
+
+				myLeader = centerObject.GetComponent<Transform>();
+
 			}
 		}
 
@@ -49,6 +62,8 @@ public class cameraFX : MonoBehaviour {
 			altitude = transform.position.y;
 	
 		}
+
+		zoomOffset = holdCamera.transform.localPosition;
 	}
 	
 	// Update is called once per frame
@@ -59,8 +74,15 @@ public class cameraFX : MonoBehaviour {
 
 			if (arenaCam == true) {
 
-				//cameraTarget = averageCenter();
-				cameraTarget = findPlayerCenter();
+				if (gameMaster.playerTransforms.Length > 1) {
+
+				cameraTarget = playerTracking();
+
+				} else {
+
+					cameraTarget = gameMaster.playerTransforms[0].transform.position;
+
+				}
 
 			} else {
 
@@ -68,13 +90,27 @@ public class cameraFX : MonoBehaviour {
 
 			}
 
+
 			float relativeY =  transform.position.y - cameraTarget.y;
+
 	
-		//track camera target while maintainging distance. 
-		Vector3 targetThis = new Vector3(cameraTarget.x + offset.x, altitude + cameraTarget.y, cameraTarget.z + offset.z);
-		transform.position = Vector3.Slerp(transform.position, targetThis, camSpeed * Time.deltaTime);
+			//track camera target while maintainging distance.
+			Vector3 targetThis = new Vector3(cameraTarget.x + offset.x, altitude + cameraTarget.y, cameraTarget.z + offset.z);
+			transform.position = Vector3.Slerp(transform.position, targetThis, camSpeed * Time.deltaTime);
 
+			//zoom in and out as characters get closer and further apart
+			//zoomScaling = 10;
+			zoomScaling = playerDistances - zoomFloor;
 
+			if (zoomScaling > zoomCeiling) {
+
+				zoomScaling = zoomCeiling;
+
+			}
+
+			var targetZoom = new Vector3(zoomOffset.x, zoomOffset.y, zoomOffset.z) + (holdCamera.transform.forward * zoomScaling * -1);
+			holdCamera.transform.localPosition = Vector3.Lerp(holdCamera.transform.localPosition, targetZoom, zoomSpeed * Time.deltaTime);
+		
 		}
 	}
 
@@ -106,7 +142,7 @@ public class cameraFX : MonoBehaviour {
 		return AverageV;
 	}
 
-	Vector3 findPlayerCenter() {
+	Vector3 playerTracking() {
 		
 		float minX = 0;
 		float minY = 0;
@@ -163,9 +199,15 @@ public class cameraFX : MonoBehaviour {
 			}
 		}
 
-		//Vector3 maxDist = new Vector3(maxX, maxY, maxZ);
-		//Vector3 minDist = new Vector3(minX, minY, minZ);
+		//Find the distance between the furthest apart players
+		Vector3 maxDist = new Vector3(maxX, maxY, maxZ);
+		Vector3 minDist = new Vector3(minX, minY, minZ);
+		playerDistances = Vector3.Distance(maxDist, minDist);
+		//Debug.Log("Distance between players: " + playerDistances);
+
+		//Find the center between all the players
 		Vector3 centerPoint = new Vector3 ((maxX + minX) /2, (maxY + minY) /2, (maxZ + minZ) /2);
 		return centerPoint;
 	}
+	
 }
