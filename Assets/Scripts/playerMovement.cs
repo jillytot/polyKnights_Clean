@@ -6,6 +6,7 @@ public class playerMovement : damageControl {
 
 	public float speed = 15.0F; //Max speed of the character
 	float newSpeed; //Used to modify speed based on input
+	float storeSpeed; //stores original character speed
 
 	public float jumpSpeed = 30.0F; //How high you can jump in relation to gravity
 	public static float gravity = 120.0F; //how fast you fall
@@ -21,6 +22,11 @@ public class playerMovement : damageControl {
 	Vector3 attackDirection; //Direction you are facing when you use charge attack
 	public float chargeTimer = 0.5f; //How long you use your charge attack for
 	bool startCharge = false;
+
+	bool blocking = false; //returns true while blocking
+	Quaternion lockRotation; //stores rotation to be locked in place while blocking
+	public float speedWhileBlocking = 5f; //Ground movement speed while blocking
+	public GameObject myShield; //shield game object
 
 	Quaternion myRotation; //used to store direction of movement
 	float Horizontal; //raw value for Horizontal axis
@@ -64,11 +70,14 @@ public class playerMovement : damageControl {
 		myAnimation = GetComponentInChildren<Animator>(); //Get animation controller and assign it to this character
 		controller = GetComponent<CharacterController>();
 		myRotation = transform.rotation;
+		lockRotation = myRotation;
 		triggerDeath = false;
 		myAudio = this.gameObject.GetComponent<AudioSource>();
 		reviveDelay = false;
 		healActive = false;
 		triggerHeal = false;
+		blocking = false;
+		storeSpeed = speed;
 
 
 	}
@@ -103,12 +112,14 @@ public class playerMovement : damageControl {
 
 		} 
 
-		//Modifies speed based on axis input
-		newSpeed = speedMod();
+			//Modifies speed based on axis input
+			newSpeed = speedMod();
 
-		//Do basic attack
-		basicAttack ();
-		chargeAttack ();
+			//Different moves
+
+			block ();
+			basicAttack ();
+			chargeAttack ();
 
 
 		//Ground Based Movement;
@@ -128,9 +139,17 @@ public class playerMovement : damageControl {
 
 					myAnimation.SetBool("Run", true); //Changes avatar to running state
 					var targetRotation = Quaternion.LookRotation(moveDirection); //set target towards direction of motion
+
+						if (blocking == false) {
+
+							lockRotation = targetRotation;
+
+						
+
 					child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
 					myRotation = child.rotation;
 
+						}
 				}  else {
 
 					myAnimation.SetBool ("Run", false); 
@@ -174,9 +193,17 @@ public class playerMovement : damageControl {
 						if (inputMagnitude.sqrMagnitude > 0.5f) {
 
 					var targetRotation = Quaternion.LookRotation(lookatMoveDirection); //set target towards direction of motion
+
+							if (blocking == false) {
+								
+								lockRotation = targetRotation;
+								
+							
+
 					child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
 					myRotation = child.rotation;
 
+							}
 						}
 					
 				}  else {
@@ -345,6 +372,43 @@ public class playerMovement : damageControl {
 		} 
 	}
 
+	void block () {
+
+		if (Input.GetButtonDown(myFire3)) {
+
+			Debug.Log("Time to block that Shiiiz");
+			blocking = true;
+
+			myAnimation.Play("blocking");
+			myShield.SetActive(true);
+			//myAttack.SetActive(false);
+			//myChargeAttack.SetActive(false);
+
+		} else if (Input.GetButtonUp(myFire3)) {
+
+			blocking = false;
+			myAnimation.Play("idle");
+			myShield.SetActive(false);
+
+		}
+
+		if (blocking == true) {
+
+			speed = speedWhileBlocking;
+
+			foreach (Transform child in transform) {
+
+				child.rotation = lockRotation;
+				myRotation = child.rotation;
+
+			}
+
+		} else {
+
+			speed = storeSpeed; 
+		}
+	}
+
 	IEnumerator reload () {
 		
 		yield return new WaitForSeconds (attackSpeed);
@@ -359,13 +423,7 @@ public class playerMovement : damageControl {
 		nextAttack = true;
 		startCharge = false;
 	}
-
-	void blockingGrounded () {
-
-		//lock player rotation, slow down movement, resist attacks from direction you are blocking in
-		//play blocking animation
-
-	}
+	
 
 	public void getMyControls () {
 
