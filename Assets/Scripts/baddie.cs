@@ -81,6 +81,8 @@ public class baddie : MonoBehaviour {
 	bool attackDone; //returns true when attack is finished
 	bool startAttacking;
 
+	bool imDeflected; //Returns true if the enemy has been deflected by the player
+
 	//new targetting stuff;
 	public static Vector3[] playerPositions;
 	float[] myTargetDistances;
@@ -286,7 +288,7 @@ public class baddie : MonoBehaviour {
 
 			RaycastHit hit;
 			Physics.Raycast(transform.position, Vector3.down, out hit);
-			Debug.DrawRay(transform.position, Vector3.down, Color.blue, 2);
+			//Debug.DrawRay(transform.position, Vector3.down, Color.blue, 2);
 
 			if (Physics.Raycast(transform.position, Vector3.down, 2)) {
 
@@ -435,6 +437,9 @@ public class baddie : MonoBehaviour {
 				//attack will last for this long
 				StartCoroutine("chargeAttackTimer");
 
+				Debug.DrawRay(transform.position, chargeTarget, Color.red, 2);
+				myRot = Quaternion.LookRotation(chargeTarget);
+
 			}
 
 			if (attacking == true) {
@@ -483,9 +488,33 @@ public class baddie : MonoBehaviour {
 		//for melee
 		if (hitPlayer && attacking == true) {
 
-			//Debug.Log("enemy hit to player");
-			hitPlayer.takeDamage(attackPower);
+			//lets check to see if the player is blocking
+			if (hitPlayer.blocking == true) {
+			
+				Debug.Log("Attack Direction: " + myRot.eulerAngles);
+				//compare baddie angle while attack to player angle while blocking
+				var facingAngle = Quaternion.Angle(hitPlayer.lockRotation, myRot);
+				Debug.Log("Angular Difference: " + facingAngle);
 
+				if (facingAngle > 90) {
+
+					Debug.Log("Deflected!");
+					imDeflected = true;
+
+				}
+			}
+
+			if (imDeflected == true) {
+
+				//If i'm deflected, don't do damage.
+				imDeflected = false;
+
+			} else {
+
+				//do damage to player
+				hitPlayer.takeDamage(attackPower);
+
+			}
 		}
 	}
 
@@ -557,5 +586,5 @@ public class baddie : MonoBehaviour {
 
 		triggerRefresh = false;
 
-	}
+	} 
 }

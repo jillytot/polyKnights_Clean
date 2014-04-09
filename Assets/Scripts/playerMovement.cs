@@ -23,8 +23,8 @@ public class playerMovement : damageControl {
 	public float chargeTimer = 0.5f; //How long you use your charge attack for
 	bool startCharge = false;
 
-	bool blocking = false; //returns true while blocking
-	Quaternion lockRotation; //stores rotation to be locked in place while blocking
+	public bool blocking = false; //returns true while blocking
+	public Quaternion lockRotation; //stores rotation to be locked in place while blocking
 	public float speedWhileBlocking = 5f; //Ground movement speed while blocking
 	public GameObject myShield; //shield game object
 
@@ -116,10 +116,16 @@ public class playerMovement : damageControl {
 			newSpeed = speedMod();
 
 			//Different moves
-
 			block ();
+
+			//cancel these attacks while blocking
+			if (blocking == false) {
+
+			//eventually each of these should have a use case for when the player is blocking
 			basicAttack ();
 			chargeAttack ();
+
+			}
 
 
 		//Ground Based Movement;
@@ -400,6 +406,8 @@ public class playerMovement : damageControl {
 
 				child.rotation = lockRotation;
 				myRotation = child.rotation;
+				var showRotation = lockRotation.eulerAngles;
+				Debug.Log("Lock Rotation is: " + showRotation);
 
 			}
 
