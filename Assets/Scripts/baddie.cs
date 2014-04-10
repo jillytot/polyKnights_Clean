@@ -82,6 +82,7 @@ public class baddie : MonoBehaviour {
 	bool startAttacking;
 
 	bool imDeflected; //Returns true if the enemy has been deflected by the player
+	bool cancelAttack; //triggers enemy to cancel their current attack
 
 	//new targetting stuff;
 	public static Vector3[] playerPositions;
@@ -130,6 +131,9 @@ public class baddie : MonoBehaviour {
 		refreshTarget = true;
 		triggerRefresh = false;
 		storeNormal = Vector3.zero;
+
+		imDeflected = false;
+		cancelAttack = false;
 
 		//Store reference to walkerScript
 		if (walkerObjects) {
@@ -410,10 +414,6 @@ public class baddie : MonoBehaviour {
 
 		}
 
-
-
-
-
 		//Do a charge attack
 		if (offsetToTarget.sqrMagnitude < attackRange * attackRange) {
 
@@ -437,17 +437,23 @@ public class baddie : MonoBehaviour {
 				//attack will last for this long
 				StartCoroutine("chargeAttackTimer");
 
-				Debug.DrawRay(transform.position, chargeTarget, Color.red, 2);
+				//Debug.DrawRay(transform.position, chargeTarget, Color.red, 2);
 				myRot = Quaternion.LookRotation(chargeTarget);
 
 			}
 
-			if (attacking == true) {
+			if (attacking == true && cancelAttack == false) {
 
 				//Get charge speed, and charge through target
 				var chargeSpeed = movementSpeed * movementSpeed;
 				transform.position = Vector3.MoveTowards(transform.position, transform.position + chargeTarget, chargeSpeed * Time.deltaTime);
 		
+			} else if (attacking == true && cancelAttack == true) {
+
+				//deflect backwards
+				var chargeSpeed = movementSpeed * movementSpeed;
+				transform.position = Vector3.MoveTowards(transform.position, transform.position - chargeTarget, chargeSpeed * Time.deltaTime);
+
 			}
 
 		} else if (attackDone == true) {
@@ -457,6 +463,7 @@ public class baddie : MonoBehaviour {
 			attackDone = false;
 			attackReady = true;
 			startAttacking = false;
+			cancelAttack = false;
 			
 		} 
 
@@ -507,7 +514,9 @@ public class baddie : MonoBehaviour {
 			if (imDeflected == true) {
 
 				//If i'm deflected, don't do damage.
+				cancelAttack = true;
 				imDeflected = false;
+				hitPlayer.deflectHit(transform.position);
 
 			} else {
 
