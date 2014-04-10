@@ -23,10 +23,13 @@ public class playerMovement : damageControl {
 	public float chargeTimer = 0.5f; //How long you use your charge attack for
 	bool startCharge = false;
 
-	bool blocking = false; //returns true while blocking
-	Quaternion lockRotation; //stores rotation to be locked in place while blocking
+	public bool blocking = false; //returns true while blocking
+	public Quaternion lockRotation; //stores rotation to be locked in place while blocking
 	public float speedWhileBlocking = 5f; //Ground movement speed while blocking
 	public GameObject myShield; //shield game object
+	bool blockStun;
+	bool triggerBlockStun;
+	Vector3 slideBack;
 
 	Quaternion myRotation; //used to store direction of movement
 	float Horizontal; //raw value for Horizontal axis
@@ -63,8 +66,6 @@ public class playerMovement : damageControl {
 	public int reviveCounter;
 	bool reviveDelay;
 
-
-
 	void Awake() {
 
 		myAnimation = GetComponentInChildren<Animator>(); //Get animation controller and assign it to this character
@@ -78,6 +79,8 @@ public class playerMovement : damageControl {
 		triggerHeal = false;
 		blocking = false;
 		storeSpeed = speed;
+
+		blockStun = false;
 
 
 	}
@@ -116,10 +119,16 @@ public class playerMovement : damageControl {
 			newSpeed = speedMod();
 
 			//Different moves
-
 			block ();
+
+			//cancel these attacks while blocking
+			if (blocking == false) {
+
+			//eventually each of these should have a use case for when the player is blocking
 			basicAttack ();
 			chargeAttack ();
+
+			}
 
 
 		//Ground Based Movement;
@@ -225,13 +234,17 @@ public class playerMovement : damageControl {
 		//Controls Gravity
 		moveDirection.y -= gravity * Time.deltaTime;
 
-		if (charging == false) {
+		if (charging == true) {
 
-		controller.Move(moveDirection * Time.deltaTime);
+				controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
 
-		} else {
+		} else if (blockStun == true) {
 
-			controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
+				controller.Move(slideBack * Time.deltaTime);
+
+			} else {
+
+				controller.Move(moveDirection * Time.deltaTime);
 
 			}
 		}
@@ -400,6 +413,8 @@ public class playerMovement : damageControl {
 
 				child.rotation = lockRotation;
 				myRotation = child.rotation;
+				var showRotation = lockRotation.eulerAngles;
+				Debug.Log("Lock Rotation is: " + showRotation);
 
 			}
 
@@ -448,6 +463,8 @@ public class playerMovement : damageControl {
 			//cancel all attacks
 			myAttack.SetActive(false);
 			myChargeAttack.SetActive(false);
+			myShield.SetActive(false);
+			blocking = false;
 			nextAttack = true;
 			startCharge = false;
 			triggerDeath = true;
@@ -571,6 +588,43 @@ public class playerMovement : damageControl {
 		triggerHeal = false;
 	}
 
+	public void deflectHit (Vector3 baddieDirection) {
 
-	
+		//Play blocking sound
+		myAudio.PlayOneShot(mySounds[3]);
+		blockStun = true;
+
+
+		if (triggerBlockStun == false) {
+
+			//stun player movement, and make them slide backward a tiny bit. 
+			var meXZ = new Vector3(transform.position.x, 0, transform.position.z);
+			var themXZ = new Vector3(baddieDirection.x, 0, baddieDirection.z);
+			slideBack = meXZ - themXZ;
+
+		}
+
+		//var slideLerp = Vector3.Lerp(transform.position, slideBack, 0);
+		//slideBack = slideLerp;
+
+		if (blockStun == true && triggerBlockStun == false) {
+
+						StartCoroutine("cancelStun");
+						triggerBlockStun = true;
+		}
+
+		//if (blockStun == true) {
+
+			//float decelration = 0.9f;
+			//speed *= decelration;
+		//}
+	}
+
+	IEnumerator cancelStun () {
+
+		yield return new WaitForSeconds (0.1f);
+		blockStun = false;
+		triggerBlockStun = false;
+
+	}
 }
