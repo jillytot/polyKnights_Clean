@@ -293,7 +293,7 @@ public class playerMovement : damageControl {
 				child.rotation = lockRotation;
 				myRotation = child.rotation;
 				var showRotation = lockRotation.eulerAngles;
-				//Debug.Log("Lock Rotation is: " + showRotation);
+				Debug.Log("Lock Rotation is: " + showRotation);
 			}
 		} else {
 			speed = storeSpeed; 

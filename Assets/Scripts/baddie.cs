@@ -4,10 +4,8 @@ using System.Collections;
 public class baddie : MonoBehaviour {
 
 	public enum enemyType { //possible basic enemy types 
-		
 		DEFAULT,
 		SHOOTER,
-		
 	}
 
 	public enemyType thisEnemyType; //enum for this enemy object
@@ -32,10 +30,8 @@ public class baddie : MonoBehaviour {
 	public float flashTime; //sets the time for the material swap to last for when the enemy gets hit
 
 	//Variables for finding targets
-
-
-	Vector3 storePlayerPos; //position of player(s)
 	
+	Vector3 storePlayerPos; //position of player(s)
 	GameObject walkerObjects; //Eventually this might need to be an array of objects, but from here we can get any component we need from the Walker;
 	Vector3 storeWalkerPos; //The vector3 position of the walker(s)
 	bool walkerSafe; //If the walker is targetable or not. 
@@ -75,8 +71,7 @@ public class baddie : MonoBehaviour {
 	Vector3 holdPosition; //position of the enemy at holdDistance from the target
 	Vector3 offsetToTarget; //difference in position between enemy and target
 	Vector3 chargeTarget; //direction of attack
-
-
+	
 	bool attacking; //used to disable other movement while attacking
 	bool attackDone; //returns true when attack is finished
 	bool startAttacking;
@@ -109,9 +104,7 @@ public class baddie : MonoBehaviour {
 		//find Walker game objects
 		//TODO move this reference to gameMaster as well.
 		walkerObjects = GameObject.FindWithTag("Walker"); 
-
 		myRot = Quaternion.identity;
-
 		}
 
 	// Use this for initialization
@@ -137,9 +130,7 @@ public class baddie : MonoBehaviour {
 
 		//Store reference to walkerScript
 		if (walkerObjects) {
-
-		checkWalker = walkerObjects.GetComponent<saveMe>();
-		
+			checkWalker = walkerObjects.GetComponent<saveMe>();
 		}
 	}
 	
@@ -147,17 +138,12 @@ public class baddie : MonoBehaviour {
 	void Update () {
 
 		if (walkerObjects ) {
-
-		storeWalkerPos = walkerObjects.transform.position;
-
+			storeWalkerPos = walkerObjects.transform.position;
 		}
-
 		//if enemy requires a target search, go into the findTarget method
 		if (refreshTarget == true ) {
-
 			refreshTarget = false;
 			lastTarget = findTarget(transform.position);
-
 		}
 
 		//current target is the most recently assigned target
@@ -283,120 +269,80 @@ public class baddie : MonoBehaviour {
 			//take x and z positions and smooth them out relative to the enemies current posotion (This will help stop the critter jitters)
 			float newXPos = Mathf.SmoothDamp(transform.position.x, groundTarget.x, ref smoothX, smoothTime);
 			float newZPos = Mathf.SmoothDamp(transform.position.z, groundTarget.z, ref smoothZ, smoothTime);
-
 			//smoothing y movement across terrain.
 			float newYPos = Mathf.SmoothDamp(transform.position.y, groundTarget.y, ref smoothY, smoothTime);
-
 			groundTarget = new Vector3 (newXPos, newYPos, newZPos);
 			transform.position = Vector3.MoveTowards(transform.position, groundTarget, movementSpeed * Time.deltaTime);
 
 			RaycastHit hit;
 			Physics.Raycast(transform.position, Vector3.down, out hit);
 			//Debug.DrawRay(transform.position, Vector3.down, Color.blue, 2);
-
 			if (Physics.Raycast(transform.position, Vector3.down, 2)) {
-
 				storeNormal = hit.normal;
-
 			}
 		
 			//rotate baddie towards their current target
-			foreach (Transform child in transform) {
-
-				//transform.up = hit.normal;
-
+			//foreach (Transform child in transform) {
 				Vector3 targetXY = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
-				
 				//Get the relative position of the target to look at
 				var targetRot = Quaternion.LookRotation(transform.position - targetXY, storeNormal);
 				this.gameObject.transform.rotation = transform.rotation.EaseTowards(targetRot, 0.2f);
-	
-				
-			}
+			//}
 		}
 	}
 
 	void shooterBehavior () {
-
 		//check walker status to determine target, if walker is not safe, then target walker
 		if (checkWalker && checkWalker.safe == false) {
-			
 			myTarget = storeWalkerPos + Vector3.up;
 			//Debug.Log("Enemy moving towards Walker at: " +  targetPosition);
-			
 		} else {
-
-			
 			myTarget = storePlayerPos + Vector3.up;
 			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
-			
 		}
-
 		var targettingRange = maxTargetRange * maxTargetRange;
 		//myTarget = storePlayerPos + Vector3.up;
 		var offsetToShootTarget = transform.position - myTarget;
-
 		if (offsetToShootTarget.sqrMagnitude < targettingRange) {
-
 		if (attackReady == true) {
-
 			attackReady = false; 
-
 			if (targetLocked == false) {
-
 				targetLocked = true;
 			}
-
 			if (targetLocked == true) {
-
 				//Debug.Log("Target at: " + myTarget);
 				targetLocked = false;
 			}
 		} 
-
 		if (attackReady == false && reloadArrow == false) {
-
 			//Debug.Log("Commence Firing!");
 			reloadArrow = true;
 			StartCoroutine("refreshAttack");
-		
 			var arrow = (GameObject)Instantiate(myArrow, transform.position, Quaternion.identity);
 			var arrowComponent = arrow.GetComponent<arrowBehavior>();
 			arrowComponent.ShootSelf(myTarget, arrowSpeed, attackPower );
-
 			}
 		}
 	}
 
 	IEnumerator refreshAttack () {
-
 		yield return new WaitForSeconds (Random.Range(attackRate * 0.9f, attackRate));
 		attackReady = true;
 		refreshTarget = true;
-
 		if (shooter == true) {
-
-		reloadArrow = false;
-
+			reloadArrow = false;
 		}
 	}
 
 	IEnumerator chargeAttackTimer () {
-
 		yield return new WaitForSeconds(1);
-
 		attackDone = true;
 		refreshTarget = true;
-
 	}
 
 	IEnumerator chargeAttackTiming () {
-
 		yield return new WaitForSeconds(Random.Range(attackRate * 0.5f, attackRate));
-
 		attackReady = false;
-
-
 	}
 
 	void basicMelee () {

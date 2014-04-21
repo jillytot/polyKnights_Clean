@@ -86,5 +86,5 @@ public class gameMaster : MonoBehaviour {
 			}
 			updateMyStats = false;
 		}
-	}
+	}	
 }
