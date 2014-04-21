@@ -88,9 +88,7 @@ public class playerMovement : damageControl {
 	void Start() {
 
 		if (gameMaster.multiplayer == true) {
-
 			getMyControls();
-		
 		}
 	}
 	
@@ -99,20 +97,14 @@ public class playerMovement : damageControl {
 		//Get axis values for calculating movement
 		Horizontal = Input.GetAxis(myHorizontal);
 		Vertical = Input.GetAxis(myVertical);
-
 		inputMagnitude =  new Vector3(Horizontal, 0, Vertical);
 
-		if (imDead == true) {
-
+		if (imDead == true) { //Do this if i'm dead!
 			playerDeath();
-
-
 		} else {
 
 		if (inputMagnitude.sqrMagnitude != 0.0f) {
-
 			lastMoveDirection = inputMagnitude;
-
 		} 
 
 			//Modifies speed based on axis input
@@ -120,318 +112,200 @@ public class playerMovement : damageControl {
 
 			//Different moves
 			block ();
-
 			//cancel these attacks while blocking
 			if (blocking == false) {
-
 			//eventually each of these should have a use case for when the player is blocking
 			basicAttack ();
 			chargeAttack ();
-
 			}
 
 
 		//Ground Based Movement;
 		if (controller.isGrounded) {
-
 			//Get axis inputs and * by speed
 			moveDirection = new Vector3(Horizontal, 0, Vertical);
 			moveDirection *= newSpeed;
 
-
 			//Apply changes to each child of the game object
 			foreach (Transform child in transform)
-			
 			{
-
 				if (moveDirection.sqrMagnitude > 0) { 
-
 					myAnimation.SetBool("Run", true); //Changes avatar to running state
 					var targetRotation = Quaternion.LookRotation(moveDirection); //set target towards direction of motion
-
 						if (blocking == false) {
-
 							lockRotation = targetRotation;
-
-						
-
-					child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
-					myRotation = child.rotation;
-
+							child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
+							myRotation = child.rotation;
 						}
 				}  else {
-
 					myAnimation.SetBool ("Run", false); 
-
 				}
 			}
 
 		//How to jump!
 		if (Input.GetButtonDown(myJump)) {
-			
 			moveDirection.y = jumpSpeed;
-					myAudio.PlayOneShot(mySounds[0]);
-
-			
+			myAudio.PlayOneShot(mySounds[0]);
 			}
 
 		//Air based movement
 		} else {
-
-			//Air Control
 			//TODO: This is messy, it needs to be cleaned up.
 			moveDirection.x = Horizontal;
 			moveDirection.z = Vertical;
-
 			Vector3 normalizeXZ = new Vector3(moveDirection.x, moveDirection.y, moveDirection.z);
 			normalizeXZ *= newSpeed;
 			Vector3 moveInAirDirection = new Vector3(normalizeXZ.x, moveDirection.y, normalizeXZ.z);
-
 			moveDirection = transform.TransformDirection(moveInAirDirection);
 
-			foreach (Transform child in transform)
-				
+			foreach (Transform child in transform)	
 			{
-				
 				if (moveDirection.sqrMagnitude > 0.5f) { 
-					
 					myAnimation.SetBool("Run", true); //Changes avatar to running state
 					Vector3 lookatMoveDirection = new Vector3(	moveDirection.x, 0, moveDirection.z);
-
-				
-						if (inputMagnitude.sqrMagnitude > 0.5f) {
-
-					var targetRotation = Quaternion.LookRotation(lookatMoveDirection); //set target towards direction of motion
-
-							if (blocking == false) {
-								
+					if (inputMagnitude.sqrMagnitude > 0.5f) {
+						var targetRotation = Quaternion.LookRotation(lookatMoveDirection); //set target towards direction of motion
+						if (blocking == false) {
 								lockRotation = targetRotation;
-								
-							
-
-					child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
-					myRotation = child.rotation;
-
+								child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
+								myRotation = child.rotation;
 							}
 						}
-					
 				}  else {
-					
 					myAnimation.SetBool ("Run", false); 
-
-					
 					}
 				}
 			}
 
-			if (imDead == false && triggerDeath == false) {
-
+			if (imDead == false && triggerDeath == false) { //Checking for healing as long as i'm not dead!
 				healingTime();
-
 			}
-
-
+		
 		//Controls Gravity
 		moveDirection.y -= gravity * Time.deltaTime;
-
 		if (charging == true) {
-
 				controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
-
 		} else if (blockStun == true) {
-
 				controller.Move(slideBack * Time.deltaTime);
-
-			} else {
-
+		} else {
 				controller.Move(moveDirection * Time.deltaTime);
-
 			}
 		}
-
 		playerPos = this.gameObject.transform.position;
-
-
 	}
 
 	//Thank Alex Austin for making this work!
 	//This controls the speed while using a radial axis analogue stick so that it's constant in any degree at any velocity
 	//With this method you don't need to normalize your movement vectors
-
 	float speedMod () {
-
 		//get the absolute value of each axis
 		var horAbs = Mathf.Abs(Horizontal);
 		var vertAbs = Mathf.Abs(Vertical);
 		float angle = 0;
-
 		//do some math...
 		if (horAbs > vertAbs) { 
-
 			angle = Mathf.Atan2(vertAbs, horAbs); 
-
 		} else {
-
 			angle = Mathf.Atan2(horAbs, vertAbs);
-
 		}
-
 		newSpeed = Mathf.Cos(angle);
 		newSpeed *= speed;
-
 		//It magically works!
 		return newSpeed;
-
 	}
 
-	void basicAttack () {
-
+	void basicAttack () { //Basic Attacking Function
 		if (Input.GetButtonDown(myFire1) && nextAttack == true) {
-			
-			//print ("attack that shit!");
-			
 			//Enable the attack graphic & the corresponding attack animation.
-
 			myAudio.PlayOneShot(mySounds[1]);
-
-			//Debug.Log("Enable Attack");
 			myAttack.SetActive(true); //This is a prefab instance which must be assigned in the editor
 			myAnimation.SetBool("attacking", true);
 			nextAttack = false;
-			
-			
 		} else {
-			
 			//when the player releases the button, allow them to attack again.
 			myAttack.SetActive(false);
 			myAnimation.SetBool("attacking", false);
 			nextAttack = true;
-
 		}
 	}
 
-	void chargeAttack () {
-
+	void chargeAttack () { //Pretty self explanitory i think...
 		if (charging == false) {
-
-			//myAttack.SetActive(false); //This is a prefab instance which must be assigned in the editor
-
+			//placeholder?
 		}
-
 		if (Input.GetButtonDown(myFire2) && nextAttack == true) {
-
 			//Get facing direction, and charge forward quickly. 
-
 			//bool startCharge = false; 
 			charging = true;
-
 			if (startCharge == false) {
 				myAudio.PlayOneShot(mySounds[2]);
-
 				if (inputMagnitude.sqrMagnitude == 0) {
-
 					Horizontal = lastMoveDirection.x;
 					Vertical = lastMoveDirection.z;
-
-
 				}
 
 				//This group of statements forces the inputs to go to their maximum
 				if (Horizontal > 0) {
-
 					Horizontal = 1;
 				}
-
 				if (Horizontal < 0) { 
-
 					Horizontal = -1;
-
 				}
-
 				if (Vertical > 0) {	
-
 					Vertical = 1;
 				}
-				
 				if (Vertical < 0) { 
-
 					Vertical = -1;
-					
 				}
 
 				//This Vector3 is used for the charge attack
-
 				attackDirection = new Vector3 (Horizontal, 0, Vertical);
 				if (attackDirection.sqrMagnitude == 0) {
-
 					attackDirection = Vector3.forward;
-
 				}
-
 				startCharge = true;
-
 			}
-
 			if (startCharge == true) {
-
-
 				myChargeAttack.SetActive(true); //This is a prefab instance which must be assigned in the editor
 				moveDirection = transform.TransformDirection(attackDirection).normalized;
-
 				StartCoroutine("chargeTime");
-
 			} 
-
 		} 
 	}
 
-	void block () {
-
+	void block () { //For Blocking!
 		if (Input.GetButtonDown(myFire3)) {
-
 			Debug.Log("Time to block that Shiiiz");
 			blocking = true;
-
 			myAnimation.Play("blocking");
 			myShield.SetActive(true);
 			//myAttack.SetActive(false);
 			//myChargeAttack.SetActive(false);
-
 		} else if (Input.GetButtonUp(myFire3)) {
-
 			blocking = false;
 			myAnimation.Play("idle");
 			myShield.SetActive(false);
-
 		}
 
 		if (blocking == true) {
-
 			speed = speedWhileBlocking;
-
 			foreach (Transform child in transform) {
-
 				child.rotation = lockRotation;
 				myRotation = child.rotation;
 				var showRotation = lockRotation.eulerAngles;
-				Debug.Log("Lock Rotation is: " + showRotation);
-
+				//Debug.Log("Lock Rotation is: " + showRotation);
 			}
-
 		} else {
-
 			speed = storeSpeed; 
 		}
 	}
 
-	IEnumerator reload () {
-		
+	IEnumerator reload () { //timer for refreshing attack
 		yield return new WaitForSeconds (attackSpeed);
 		nextAttack = true;
 	}
 
-	IEnumerator chargeTime () {
-		
+	IEnumerator chargeTime () { //timer for refreshing charge attack
 		yield return new WaitForSeconds (chargeTimer);
 		charging = false;
 		myChargeAttack.SetActive(false); //This is a prefab instance which must be assigned in the editor
@@ -440,8 +314,7 @@ public class playerMovement : damageControl {
 	}
 	
 
-	public void getMyControls () {
-
+	public void getMyControls () { //assigns palyer controls
 		controls = playerControls.getControls(thisPlayer);
 		myHorizontal = controls.horizontal;
 		myVertical = controls.vertical;
@@ -449,17 +322,14 @@ public class playerMovement : damageControl {
 		myFire2 = controls.fire2;
 		myFire3 = controls.fire3;
 		myJump = controls.jump;
-
 	}
 
-	void playerDeath () {
-
+	void playerDeath () { //Im dead, now what do i do?
 		//trigger death animation when you die...
 		if (triggerDeath == false) {
-
 			//myAnimation.SetBool("imDead", true);
-
 			myAnimation.Play("imDead");
+
 			//cancel all attacks
 			myAttack.SetActive(false);
 			myChargeAttack.SetActive(false);
@@ -468,39 +338,31 @@ public class playerMovement : damageControl {
 			nextAttack = true;
 			startCharge = false;
 			triggerDeath = true;
-
 		}
-
 		//make the axis input zero so the player can't move. 
 		Horizontal = 0;
 		Vertical = 0;
-
 	}
 
 	//Current revive player behavior: Living player hits a dead player with an attack multple times to revive them to full Health. 
 	//This is obviously temp...
 	public void reviveMe () {
-
 		//every time the player gits hit, wait a little bit before before they can get hit again
 		if (reviveDelay == false) {
-
 			//decrement the revive counter each time a hit registers. 
 			reviveCounter -= 1;
 			myMat.renderer.material = healMat;  //flash the heal material to indicate the player is being healed
 			reviveDelay = true;
 			StartCoroutine("reviveMat"); //this counter resets the reviveDelay bool so the player can get hit again
-
 		}
 
 		//if the revive counter counts down all the way, revive the player.
 		if (reviveCounter < 1) {
-
 			myHP = myMaxHp;
 			imDead = false;
 			triggerDeath = false;
 			reviveCounter = 10;
 			myAnimation.Play("idle");
-
 		}
 	}
 
@@ -515,50 +377,33 @@ public class playerMovement : damageControl {
 	}
 
 	void OnTriggerEnter (Collider other) {
-
 		var safeZone = other.collider.GetComponent<safeZone>();
-
 		//check to see if the safe zone is present and active
 		if (safeZone && safeZone.disableProtection == false) {
-
 			healActive = true;
 			Debug.Log("I am now in the safe zone");
-
 		}
-	
 	}
 
 	void OnTriggerExit (Collider other) {
-
 		var notSafe = other.collider.GetComponent<safeZone>();
-
 		if (notSafe) {
-
 			healActive = false;
 			Debug.Log("I am not safe anymore!");
 			healingEffect.SetActive(false);
-
 		}
-
 	}
 
 	void healingTime () {
-
 		if (healActive == true) {
-
 			healingEffect.SetActive(true);
-
 		}
-
 		if (healActive == true && triggerHeal == false) {
-
 			triggerHeal = true;
 			StartCoroutine("healing");
-
 		}
 
 		if (safeZone.disableProtection == true) {
-
 			healActive = false;
 			Debug.Log("I am not safe anymore!");
 			healingEffect.SetActive(false);
@@ -566,65 +411,43 @@ public class playerMovement : damageControl {
 	}
 
 	IEnumerator healing () {
-
-
-
 		myHP += saveMe.healAmount;
-	
-
-		if (myHP > myMaxHp) {
-
+		if (myHP > myMaxHp) { //clamp healing so you can never go over your max HP
 			myHP = myMaxHp;
-
 		} else {
-
 			//If the torch flame is healing me, substract more energy from the torch
 			var healPenalty = safeZone.torchPower * saveMe.healAmount * 0.1f;
 			safeZone.torchPower -= healPenalty;
-
 		}
-
 		yield return new WaitForSeconds(1);
 		triggerHeal = false;
 	}
 
 	public void deflectHit (Vector3 baddieDirection) {
-
 		//Play blocking sound
 		myAudio.PlayOneShot(mySounds[3]);
 		blockStun = true;
-
-
 		if (triggerBlockStun == false) {
-
 			//stun player movement, and make them slide backward a tiny bit. 
 			var meXZ = new Vector3(transform.position.x, 0, transform.position.z);
 			var themXZ = new Vector3(baddieDirection.x, 0, baddieDirection.z);
 			slideBack = meXZ - themXZ;
-
 		}
-
 		//var slideLerp = Vector3.Lerp(transform.position, slideBack, 0);
 		//slideBack = slideLerp;
-
 		if (blockStun == true && triggerBlockStun == false) {
-
 						StartCoroutine("cancelStun");
 						triggerBlockStun = true;
 		}
-
 		//if (blockStun == true) {
-
 			//float decelration = 0.9f;
 			//speed *= decelration;
 		//}
 	}
 
 	IEnumerator cancelStun () {
-
 		yield return new WaitForSeconds (0.1f);
 		blockStun = false;
 		triggerBlockStun = false;
-
 	}
 }

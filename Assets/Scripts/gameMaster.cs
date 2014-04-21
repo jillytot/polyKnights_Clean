@@ -46,83 +46,45 @@ public class gameMaster : MonoBehaviour {
 		killCount = new int[getPlayers.Length];
 		//playerIndexer = new int[getPlayers.Length];
 
-
 		if (MultiplayOn == true) {multiplayer = true;} else {multiplayer = false;}
-
 		//hahah rewrite this
 		foreach (GameObject walker in walkers) {
-
 			walkerHealth += walker.GetComponent<damageControl>().myHP;
-
 				}
-
 		//Debug.Log ("Number of players = " + playerCount);
 		//Debug.Log ("Walker Count = " + walkerCount + " & Together they have: " + walkerHealth + "hp");
 
 		//assign player transforms.
 		for (int i = 0; i < getPlayers.Length; i++) {
-			
 			//store references to transforms
 			playerTransforms[i] = getPlayers[i].GetComponent<Transform>();
-
 			//storeReferences to playerHP
 			getDamage[i] = getPlayers[i].GetComponent<damageControl>();
 			playerHP[i] = getDamage[i].myHP;
 			playerMaxHP[i] = getDamage[i].myMaxHp;
-
 			playerNames[i] = getPlayers[i].GetComponent<playerMovement>().thisPlayer;
 			Debug.Log(playerNames[i] + " P" + (i + 1) + " HP: " + playerHP[i] + "/" + playerMaxHP[i]);
-
 		}
-
-//	if (mainWalker) {
-
-			//var getMainWalkerHP = mainWalker.gameObject.GetComponent<saveMe>();
-			//torchWalkerHP = getMainWalkerHP.myHP;
-
-
-
-		//find names of controllers currently plugged in
-		//for (int i = 0; i < Input.GetJoystickNames().Length; i++) {
-			
-			//Debug.Log(Input.GetJoystickNames()[i]);
-			
-		//}
-
-	
-		}
+	}
 
 
 	// Use this for initialization
 	void Start () {
-
-
-	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-
 		for (int i = 0; i < getPlayers.Length; i++) {
-
 			playerHP[i] = getDamage[i].myHP;
 			playerMaxHP[i] = getDamage[i].myMaxHp;
-
-
 		}
-
 		if (updateMyStats == true) {
-
 			if (getPlayerStats != null) {
-
 				getPlayerStats();
 				Debug.Log("Updating player Stats");
-
 			}
-
 			updateMyStats = false;
-
 		}
 	}
 }
