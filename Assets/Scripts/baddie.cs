@@ -148,31 +148,20 @@ public class baddie : MonoBehaviour {
 
 		//current target is the most recently assigned target
 		storePlayerPos = lastTarget.transform.position;
-
-
 		//kill this game object if it's dead, you know, out of HPs
 		if (HP <= 0) {
-
 			//add to kill count (pass player number to the object that is dead); hitByPlayer
 			var killIndex = 0;
-
 			for (int i = 0; i < gameMaster.playerNames.Length; i ++) {
-
 				if (gameMaster.playerNames[i] == hitByPlayer) {
-
 					killIndex = i;
-
 				}
-
 			}
-
 			gameMaster.killCount[killIndex] += 1;
 			Debug.Log(hitByPlayer + " has killed: " +  gameMaster.killCount[killIndex] + " Enemies");
-
 			//drop embers upon death
 			int randomNum = Random.Range(1,100);
 			if (randomNum < 15) {
-
 				//TODO: THIS IS NOT THE SAFEST WAY TO IMPLEMENT THIS! MAKE A LIBRARY!
 				//drop embers sometimes upon death
 				var spawnPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
@@ -180,92 +169,55 @@ public class baddie : MonoBehaviour {
 				var emberComponent = myEmber.GetComponent<emberBehavior>();
 				emberComponent.emberValue = emberValue;
 			}
-
 			Destroy(this.gameObject);
-
 		}
 
 		//If i've been hit, do this:
 		//TODO: change this to a function which the player access with get component
-
 		if (imHit == true) {
-
 			//Change the enemy material to indicate that it's been hit
 			enemyMat.renderer.material = hitMat;
 			StartCoroutine("flashTimer"); //resets imHIt bool after certain time
-
 		} else if (attacking == true) {
-		
 			enemyMat.renderer.material = attackMat;
-
 		} else {
-
 			//Return to default material if i'm not hit;
 			enemyMat.renderer.material = storeMat;
-
 		}
-
 	if (moveOnGround == true) {
-
 			basicBaddieBehavior ();
-
 		}
 
 		if (shooter == true) {
-
 			shooterBehavior ();
-
 		}
 	}
 
 	//counts down by flashTime then returns false for imhit
 	IEnumerator flashTimer () {
-		
 		yield return new WaitForSeconds (flashTime);
 		imHit = false;
-
 	}
 
 	//Basic enemy behavior
 	void basicBaddieBehavior () { 
-
-
-
 		//check walker status to determine target, if walker is not safe, then target walker
 		if (checkWalker && checkWalker.safe == false) {
-
 			targetPosition = storeWalkerPos;
-
-
 			//Debug.Log("Enemy moving towards Walker at: " +  targetPosition);
-
 		} else {
-
 			targetPosition = storePlayerPos;
 			//Debug.Log("Enemy moving towards Player at: " +  targetPosition);
-
 		}
-
 		if (meleeEnabled == true) {
-
 			basicMelee ();
-
 			groundTarget = new Vector3 (holdPosition.x, this.gameObject.transform.position.y, holdPosition.z);
-			
 		} else {
-
 			groundTarget = new Vector3 (targetPosition.x, this.gameObject.transform.position.y, targetPosition.z);
-
 			}
-
-
-
 		if (attacking == true) {
-
-		} 
-
-		else {
-
+			//just keeping doing what you are doing until attacking = false...
+		} else {
 			//take x and z positions and smooth them out relative to the enemies current posotion (This will help stop the critter jitters)
 			float newXPos = Mathf.SmoothDamp(transform.position.x, groundTarget.x, ref smoothX, smoothTime);
 			float newZPos = Mathf.SmoothDamp(transform.position.z, groundTarget.z, ref smoothZ, smoothTime);
@@ -280,7 +232,6 @@ public class baddie : MonoBehaviour {
 			if (Physics.Raycast(transform.position, Vector3.down, 2)) {
 				storeNormal = hit.normal;
 			}
-		
 			//rotate baddie towards their current target
 			//foreach (Transform child in transform) {
 				Vector3 targetXY = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
@@ -346,93 +297,64 @@ public class baddie : MonoBehaviour {
 	}
 
 	void basicMelee () {
-
 		offsetToTarget =  this.gameObject.transform.position - targetPosition;
-	
-
 		if (offsetToTarget.sqrMagnitude < holdDistance * holdDistance) {
-
 			holdPosition = transform.position + offsetToTarget;
-
 		} else {
-
 			holdPosition = targetPosition;
-
 		}
 
 		//Do a charge attack
 		if (offsetToTarget.sqrMagnitude < attackRange * attackRange) {
-
 			if (attackReady == true && startAttacking == false) {
-				
 				//randomize & spread out attack rate
 				StartCoroutine("chargeAttackTiming");
 				startAttacking = true;
-
 			}
 
 
 			if (attacking == false && attackReady == false) {
-
 				//calculate the target position to charge to
 				chargeTarget = targetPosition - this.gameObject.transform.position;
 				chargeTarget = new Vector3(chargeTarget.x, 0, chargeTarget.z);
 				chargeTarget = chargeTarget.normalized;
 				attacking = true; 
-
 				//attack will last for this long
 				StartCoroutine("chargeAttackTimer");
-
 				//Debug.DrawRay(transform.position, chargeTarget, Color.red, 2);
 				myRot = Quaternion.LookRotation(chargeTarget);
-
 			}
-
 			if (attacking == true && cancelAttack == false) {
-
 				//Get charge speed, and charge through target
 				var chargeSpeed = movementSpeed * movementSpeed;
 				transform.position = Vector3.MoveTowards(transform.position, transform.position + chargeTarget, chargeSpeed * Time.deltaTime);
-		
 			} else if (attacking == true && cancelAttack == true) {
-
 				//deflect backwards
 				var chargeSpeed = movementSpeed * movementSpeed;
 				transform.position = Vector3.MoveTowards(transform.position, transform.position - chargeTarget, chargeSpeed * Time.deltaTime);
-
 			}
-
 		} else if (attackDone == true) {
-
 			//Once the attack is over, reset all the parameters.
 			attacking = false;
 			attackDone = false;
 			attackReady = true;
 			startAttacking = false;
 			cancelAttack = false;
-			
 		} 
-
 		//If not attacking, peridoically update your target.
 		if (triggerRefresh == false) {
-
 			triggerRefresh = true;
 			StartCoroutine("refreshTargetBool");
 		}
 	}
 
 	void OnTriggerEnter (Collider other) {
-
 		//only damage the walker if not safe
 		if (walkerObjects && checkWalker.safe == false) {
-
 		var hitWalker = other.GetComponent<saveMe>();
-
 			//for Melee
 			if (hitWalker && attacking == true) {
-
 				hitWalker.takeDamage (attackPower);
-
 			}
 		}
 
@@ -440,106 +362,69 @@ public class baddie : MonoBehaviour {
 
 		//for melee
 		if (hitPlayer && attacking == true) {
-
 			//lets check to see if the player is blocking
 			if (hitPlayer.blocking == true) {
-			
 				Debug.Log("Attack Direction: " + myRot.eulerAngles);
 				//compare baddie angle while attack to player angle while blocking
 				var facingAngle = Quaternion.Angle(hitPlayer.lockRotation, myRot);
 				Debug.Log("Angular Difference: " + facingAngle);
-
 				if (facingAngle > 90) {
-
 					Debug.Log("Deflected!");
 					imDeflected = true;
-
 				}
 			}
-
 			if (imDeflected == true) {
-
 				//If i'm deflected, don't do damage.
 				cancelAttack = true;
 				imDeflected = false;
 				hitPlayer.deflectHit(transform.position);
-
 			} else {
-
 				//do damage to player
 				hitPlayer.takeDamage(attackPower);
-
 			}
 		}
 	}
 
 	//returns transform of closest target to enemy
 	Transform findTarget (Vector3 myPos) {
-
 		//default value for target
 		var closestIndex = -1;
-		
 		for (int i = 0; i < gameMaster.getPlayers.Length; i++) {
-
 			if (gameMaster.getDamage[i].myHP < 1) {
-
 				//This is super useful
 				continue;
-
 			}
-			
 			if (closestIndex == -1) {
-
 				closestIndex = i;
-		
 			}
-
 			//get the position of each player
 			 playerPositions[i] = gameMaster.playerTransforms[i].transform.position;
-			
 			//Debug.Log("Player: " + (i + 1) + " is located at: " + playerPositions[i]);
-
 			//find the distance to each player from this enemy
 			var distanceOffset = myPos - playerPositions[i];
 			myTargetDistances[i] = distanceOffset.sqrMagnitude;
-
-			
 			//check targets to see if their dead... 
 			if (i > 0 &&   myTargetDistances[i] < myTargetDistances[closestIndex]) {
-
 				//comare distances to targets
-
 				//if the distance to the current position is shorter than the previous position, target is current position.
 				closestIndex = i;
 				//Debug.Log("Update target to: " + playerPositions[selectTarget] + "from previous target: " + playerPositions[i - 1]);
-					
 				}
 			}
-
 		if (closestIndex >= 0) {
-
-		selectTarget = closestIndex;
-
+			selectTarget = closestIndex;
 		}
-
 		//This will probably still need further refinment
 		var chosenTarget = gameMaster.playerTransforms[selectTarget];
 		//print ("I CHOOSE YOU " + chosenTarget);
-		
 		return chosenTarget; 
-		
 	}
 
 	IEnumerator refreshTargetBool () {
-
 		yield return new WaitForSeconds(Random.Range( refreshTargetRate *0.75f, refreshTargetRate * 1.25f) );
-
 		if (attacking == false) {
-
 			refreshTarget = true;
 		}
-
 		triggerRefresh = false;
-
 	} 
 }
