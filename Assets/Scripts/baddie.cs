@@ -312,7 +312,6 @@ public class baddie : MonoBehaviour {
 				startAttacking = true;
 			}
 
-
 			if (attacking == false && attackReady == false) {
 				//calculate the target position to charge to
 				chargeTarget = targetPosition - this.gameObject.transform.position;
@@ -364,12 +363,12 @@ public class baddie : MonoBehaviour {
 		if (hitPlayer && attacking == true) {
 			//lets check to see if the player is blocking
 			if (hitPlayer.blocking == true) {
-				Debug.Log("Attack Direction: " + myRot.eulerAngles);
+				//Debug.Log("Attack Direction: " + myRot.eulerAngles);
 				//compare baddie angle while attack to player angle while blocking
 				var facingAngle = Quaternion.Angle(hitPlayer.lockRotation, myRot);
-				Debug.Log("Angular Difference: " + facingAngle);
+				//Debug.Log("Angular Difference: " + facingAngle);
 				if (facingAngle > 90) {
-					Debug.Log("Deflected!");
+					//Debug.Log("Deflected!");
 					imDeflected = true;
 				}
 			}
