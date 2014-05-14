@@ -2,6 +2,13 @@
 
 using System.Collections;
 
+public enum playerClass { //playerNumber 
+	
+	SWORDY,
+	MAGE
+	
+}
+
 public class playerMovement : damageControl {
 
 	public float speed = 15.0F; //Max speed of the character
@@ -49,6 +56,7 @@ public class playerMovement : damageControl {
 	CharacterController controller; //create instance of character controller
 
 	public playerNum thisPlayer;
+	public playerClass myClass;
 	
 	AudioSource myAudio;
 	public AudioClip[] mySounds;
