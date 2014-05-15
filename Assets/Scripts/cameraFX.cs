@@ -19,6 +19,7 @@ public class cameraFX : MonoBehaviour {
 	Vector3 zoomOffset;
 
 	float playerDistances;
+	float storeZoom; 
 	Transform playerCenter;
 
 	bool arenaCam = false;
@@ -31,7 +32,7 @@ public class cameraFX : MonoBehaviour {
 	GameObject showTargetInst;
 	//============================
 
-//TODO: make zooming work in walker mode, 
+//TODO: zooming gets funky when going up / down hills in Walker Mode..., 
 //TODO: clamp player positions to camera max boundry.
 
 	void Start () {
@@ -55,6 +56,7 @@ public class cameraFX : MonoBehaviour {
 		if (myLeader) {
 			offset = transform.position - myLeader.transform.position;
 			altitude = transform.position.y;
+			storeZoom = myLeader.transform.position.y;
 		}
 		zoomOffset = holdCamera.transform.localPosition;
 	}
@@ -86,7 +88,7 @@ public class cameraFX : MonoBehaviour {
 			transform.position = Vector3.Slerp(transform.position, targetThis, camSpeed * Time.deltaTime);
 
 			//zoom in and out as characters get closer and further apart
-
+			//var zoomFloorOffset = storeZoom - cameraTarget.y;
 			if (walkerMode == true) {
 				var averageDistance = Vector3.Distance(myLeader.transform.position, cameraTarget);
 				averageDistance *= 2;
@@ -186,7 +188,7 @@ public class cameraFX : MonoBehaviour {
 	Vector3 trackWithWalker(Vector3 Walker, Vector3 averageWith) {
 		float checkPlayers = 2;
 		float weightX = (Walker.x + averageWith.x) / checkPlayers;
-		float weightY = (Walker.y + averageWith.y);
+		float weightY = (Walker.y + averageWith.y)/ checkPlayers;
 		float weightZ = (Walker.z + averageWith.z) / checkPlayers;
 		Vector3 weightedTarget = new Vector3(weightX, weightY, weightZ);
 		return weightedTarget;
