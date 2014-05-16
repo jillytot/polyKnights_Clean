@@ -16,6 +16,13 @@ public class cameraFX : MonoBehaviour {
 	public float zoomScaling = 1;
 
 	public GameObject holdCamera;
+	private Camera battleCam;
+	private Plane[] fPlanes;
+	private int planeIndex;
+	private GameObject[] fpObjects;
+
+	private Collider[] playerColliders;
+
 	Vector3 zoomOffset;
 
 	float playerDistances;
@@ -31,11 +38,34 @@ public class cameraFX : MonoBehaviour {
 	public GameObject showTarget;
 	GameObject showTargetInst;
 	//============================
+	
+	//TODO: clamp player positions to camera max boundry. - Since the camera is at a tilt, using it's frustrum boundary will mess with movement in Y,
+	//I will try calculating the fustrum in x and z where it meets the camera target, but draw the collision plains parallel to the y axis instead of pointed toward the camera
+	//TODO: camera doesn't follow players falling off edges
+	//TODO: the camera can only move so far away from the walker before stopping. 
 
-//TODO: zooming gets funky when going up / down hills in Walker Mode..., 
-//TODO: clamp player positions to camera max boundry.
+	void Awake () {
+		battleCam = holdCamera.gameObject.GetComponent<Camera>();
+		fPlanes = GeometryUtility.CalculateFrustumPlanes(battleCam);
+		fpObjects = new GameObject[fPlanes.Length];
+		planeIndex = fPlanes.Length;
+		int i = 0;
+		while (i < fPlanes.Length) {
+			fpObjects[i] = GameObject.CreatePrimitive(PrimitiveType.Plane);
+			fpObjects[i].name = "Plane " + i.ToString ();
+			fpObjects[i].transform.position = -fPlanes[i].normal * fPlanes[i].distance;
+			fpObjects[i].transform.rotation = Quaternion.FromToRotation(Vector3.up, fPlanes[i].normal);
+			i++;
+		}
+	}
 
 	void Start () {
+
+		playerColliders = new Collider[gameMaster.getPlayers.Length];
+		for (int i = 0; i < gameMaster.getPlayers.Length; i++) {
+			playerColliders[i] = gameMaster.getPlayers[i].GetComponent<Collider>();
+
+		}
 
 		//If there is a walker on the map, assign myLeader
 		if (gameMaster.walkers.Length > 0) {
@@ -60,11 +90,27 @@ public class cameraFX : MonoBehaviour {
 		}
 		zoomOffset = holdCamera.transform.localPosition;
 	}
-
-
 	
-	// Update is called once per frame
 	void Update () {
+
+		fPlanes = new Plane[planeIndex];
+		fPlanes = GeometryUtility.CalculateFrustumPlanes(battleCam);
+		int derp = 0;
+		while (derp < fPlanes.Length) {
+			fpObjects[derp].transform.position = -fPlanes[derp].normal * fPlanes[derp].distance;
+			fpObjects[derp].transform.rotation = Quaternion.FromToRotation(Vector3.up, fPlanes[derp].normal);
+			derp++;
+		}
+
+		for (int i = 0; i < playerColliders.Length; i++) {
+
+				if (GeometryUtility.TestPlanesAABB(fPlanes, playerColliders[i].collider.bounds)) {
+					Debug.Log("Player has hit edge");
+				} else { 
+					Debug.Log("nothing has been detected");
+			}
+		}
+
 		if (myLeader) { 
 			if (arenaCam == true) {
 				if (gameMaster.playerTransforms.Length > 1) {
@@ -114,8 +160,14 @@ public class cameraFX : MonoBehaviour {
 			Destroy(showTargetInst);
 			triggerShowTarget = false;
 		}
+
+		//send a ray from the camera center to each frustum edge, 
+		RaycastHit hit;
+		for (int i = 0; i < fPlanes.Length; i ++) {
+			//Physics.Raycast(transform.position, Vector3.down, out hit);
+			Debug.DrawRay(cameraTarget, fpObjects[i].transform.position, Color.blue);
+		}
 	}
-	
 
 	Vector3 averageCenter() {
 
