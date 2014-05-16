@@ -8,14 +8,12 @@ public class PlayerFactory : MonoBehaviour {
 
 	RowPositions positions;
 
-	// creates a number of player GameObjects from playerPrefab
-	public GameObject[] SpawnPlayers(playerClass[] playerClasses)
-	{
+	// Creates a number of player GameObjects from playerPrefab
+	public GameObject[] SpawnPlayers(playerClass[] playerClasses) {
 		positions = new RowPositions(playerClasses.Length);
 		List<GameObject> players = new List<GameObject>();
 
-		for(int i = 0; i < playerClasses.Length; i++)
-		{
+		for(int i = 0; i < playerClasses.Length; i++) {
 			var player = (GameObject)Instantiate(playerPrefab);
 			players.Add(player);
 
@@ -29,59 +27,33 @@ public class PlayerFactory : MonoBehaviour {
 		return players.ToArray();
 	}
 
-	void SetPlayerPosition(GameObject player)
-	{
+	void SetPlayerPosition(GameObject player) {
 		player.transform.position = positions.GetNextPosition();
 	}
 
-	void SetPlayerMaterial(GameObject player, int iPlayer)
-	{
+	void SetPlayerMaterial(GameObject player, int iPlayer) {
 		Material material = materials[iPlayer];
-
 		player.GetComponentInChildren<SkinnedMeshRenderer>().material = material;
 		player.GetComponent<playerMovement>().storeMat = material;
+
+		var directionIndicatorMaterial = player.transform.Find("FX").Find("direction").gameObject.GetComponent<MeshRenderer>().material;
+		directionIndicatorMaterial.color = colors[iPlayer];
 	}
 
-	void SetPlayerNumber(GameObject player, int iPlayer)
-	{
-		playerNum[] indexToPlayerNum = new playerNum[] {
-			playerNum.PLAYER1,
-			playerNum.PLAYER2,
-			playerNum.PLAYER3,
-			playerNum.PLAYER4,
-			playerNum.PLAYER5,
-			playerNum.PLAYER6,
-			playerNum.PLAYER7,
-			playerNum.PLAYER8
-		};
-		
-		player.GetComponent<playerMovement>().thisPlayer = indexToPlayerNum[iPlayer];
+	void SetPlayerNumber(GameObject player, int iPlayer) {
+		player.GetComponent<playerMovement>().thisPlayer = PlayerNumConverter.IndexToPlayerNum(iPlayer);
 	}
 
-	void SetPlayerClass(GameObject player, playerClass c)
-	{
+	void SetPlayerClass(GameObject player, playerClass c) {
 		player.GetComponent<playerMovement>().myClass = c;
 	}
 
 	void SetPlayerInfoColor(int iPlayer)
 	{
-		Dictionary<playerNum, int> playerNumToIndex = new Dictionary<playerNum, int> {
-			{playerNum.PLAYER1, 0},
-			{playerNum.PLAYER2, 1},
-			{playerNum.PLAYER3, 2},
-			{playerNum.PLAYER4, 3},
-			{playerNum.PLAYER5, 4},
-			{playerNum.PLAYER6, 5},
-			{playerNum.PLAYER7, 6},
-			{playerNum.PLAYER8, 7},
-		};
-
-		foreach(var playerInfo in GameObject.FindGameObjectsWithTag("PlayerInfo"))
-		{
+		foreach(var playerInfo in GameObject.FindGameObjectsWithTag("PlayerInfo")) {
 			var stats = playerInfo.GetComponent<displayPlayerStats>();
 
-			if(playerNumToIndex[stats.displayNum] == iPlayer)
-			{
+			if(PlayerNumConverter.PlayerNumToIndex(stats.displayNum) == iPlayer) {
 //				stats.showName = "p" + (iPlayer + 1);
 				var textMesh = playerInfo.GetComponent<TextMesh>();
 				textMesh.color = colors[iPlayer];
@@ -91,8 +63,7 @@ public class PlayerFactory : MonoBehaviour {
 }
 
 // Simple class that assigns positions in rows in the XZ plane
-public class RowPositions
-{
+public class RowPositions {
 	int columns = 4;
 	float spacing = 3.0f;
 	Vector3 center = new Vector3(0.0f, 10.0f, 0.0f);
@@ -100,13 +71,11 @@ public class RowPositions
 	int currentPosition = 0;
 	int nPositions;
 
-	public RowPositions(int nPositions)
-	{
+	public RowPositions(int nPositions) {
 		this.nPositions = nPositions;
 	}
 
-	public Vector3 GetNextPosition()
-	{
+	public Vector3 GetNextPosition() {
 		var row = currentPosition / columns;
 		var isLastRow = row == nPositions / columns;
 		var rowSize = isLastRow && nPositions % columns != 0 ? nPositions % columns : columns;
@@ -121,5 +90,38 @@ public class RowPositions
 		currentPosition++;
 
 		return position;
+	}
+}
+
+// Used to convert between playerNum enums and their corresponding (zero based) integers
+public class PlayerNumConverter {
+	static playerNum[] indexToPlayerNum = new playerNum[] {
+		playerNum.PLAYER1,
+		playerNum.PLAYER2,
+		playerNum.PLAYER3,
+		playerNum.PLAYER4,
+		playerNum.PLAYER5,
+		playerNum.PLAYER6,
+		playerNum.PLAYER7,
+		playerNum.PLAYER8
+	};
+
+	static Dictionary<playerNum, int> playerNumToIndex = new Dictionary<playerNum, int> {
+		{playerNum.PLAYER1, 0},
+		{playerNum.PLAYER2, 1},
+		{playerNum.PLAYER3, 2},
+		{playerNum.PLAYER4, 3},
+		{playerNum.PLAYER5, 4},
+		{playerNum.PLAYER6, 5},
+		{playerNum.PLAYER7, 6},
+		{playerNum.PLAYER8, 7},
+	};
+
+	public static playerNum IndexToPlayerNum(int i) {
+		return indexToPlayerNum[i];
+	}
+
+	public static int PlayerNumToIndex(playerNum p) {
+		return playerNumToIndex[p];
 	}
 }
