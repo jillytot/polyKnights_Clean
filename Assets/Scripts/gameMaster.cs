@@ -5,6 +5,9 @@ public class gameMaster : MonoBehaviour {
 
 	//controls universal variables for the game, tracks stats, etc...
 
+	public PlayerFactory playerFactory;
+	public playerClass[] playerClasses;
+
 	public static bool gameOver; //Gee, i wonder what this triggers
 
 	public static GameObject[] getPlayers; //Store references to player objects for all to access
@@ -34,7 +37,12 @@ public class gameMaster : MonoBehaviour {
 	void Awake () {
 
 		//initializing values
-		getPlayers = GameObject.FindGameObjectsWithTag ("Player");
+
+		if(!playerFactory)
+			getPlayers = GameObject.FindGameObjectsWithTag ("Player"); // so the scenes without a PlayerFactory won't break
+		else
+			getPlayers = playerFactory.SpawnPlayers(playerClasses);
+
 		walkers = GameObject.FindGameObjectsWithTag ("Walker");
 		playerTransforms = new Transform[getPlayers.Length]; //Create a reference to the transforms of the players
 		playerHP = new int[getPlayers.Length];
