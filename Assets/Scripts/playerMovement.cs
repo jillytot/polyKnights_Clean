@@ -46,6 +46,7 @@ public class playerMovement : damageControl {
 	private Vector3 inputMagnitude; //store axis input
 	private Vector3 lastMoveDirection; //record last movement.
 	private Vector3 lastPositionOnGround = Vector3.zero;
+	private Quaternion lastRotationOnGround = Quaternion.identity;
 	public Vector3 playerPos;
 
 	public bool followedByCamera = true;
@@ -459,8 +460,10 @@ public class playerMovement : damageControl {
 
 	void CheckIfPlayerJumpedOffMap()
 	{
-		if(GroundBelow())
+		if(GroundBelow()) {
 			lastPositionOnGround = playerPos;
+			lastRotationOnGround = myRotation;
+		}
 		else if(playerPos.y < -10) {
 			followedByCamera = false;
 			
@@ -475,7 +478,7 @@ public class playerMovement : damageControl {
 	}
 
 	void DieFromJumpingOffMap() {
-		RespawnPlayer(lastPositionOnGround);
+		RespawnPlayer(lastPositionOnGround - lastRotationOnGround * Vector3.forward * 3);
 		followedByCamera = true;
 	}
 
