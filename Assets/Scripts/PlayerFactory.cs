@@ -9,7 +9,7 @@ public class PlayerFactory : MonoBehaviour {
 	RowPositions positions;
 
 	// Creates a number of player GameObjects from playerPrefab
-	public GameObject[] SpawnPlayers(playerClass[] playerClasses) {
+	public GameObject[] CreatePlayers(playerClass[] playerClasses) {
 		positions = new RowPositions(playerClasses.Length);
 		List<GameObject> players = new List<GameObject>();
 

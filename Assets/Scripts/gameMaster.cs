@@ -41,7 +41,7 @@ public class gameMaster : MonoBehaviour {
 		if(!playerFactory)
 			getPlayers = GameObject.FindGameObjectsWithTag ("Player"); // so the scenes without a PlayerFactory won't break
 		else
-			getPlayers = playerFactory.SpawnPlayers(playerClasses);
+			getPlayers = playerFactory.CreatePlayers(playerClasses);
 
 		walkers = GameObject.FindGameObjectsWithTag ("Walker");
 		playerTransforms = new Transform[getPlayers.Length]; //Create a reference to the transforms of the players
