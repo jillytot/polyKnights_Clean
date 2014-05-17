@@ -45,7 +45,10 @@ public class playerMovement : damageControl {
 	private Vector3 moveDirection = Vector3.zero; //initialize movement direction
 	private Vector3 inputMagnitude; //store axis input
 	private Vector3 lastMoveDirection; //record last movement.
+	private Vector3 lastPositionOnGround = Vector3.zero;
 	public Vector3 playerPos;
+
+	public bool followedByCamera = true;
 
 	Animator myAnimation; // Animation controller
 
@@ -95,11 +98,10 @@ public class playerMovement : damageControl {
 
 	void Start() {
 
-		if (gameMaster.multiplayer == true) {
+		if (gameMaster.multiplayer)
 			getMyControls();
-		}
 	}
-	
+
 	void Update() {
 
 		//Get axis values for calculating movement
@@ -107,25 +109,27 @@ public class playerMovement : damageControl {
 		Vertical = Input.GetAxis(myVertical);
 		inputMagnitude =  new Vector3(Horizontal, 0, Vertical);
 
-		if (imDead == true) { //Do this if i'm dead!
+		if (imDead) {//Do this if i'm dead!
 			playerDeath();
-		} else {
+			return;
+		}
 
-		if (inputMagnitude.sqrMagnitude != 0.0f) {
+		CheckIfPlayerJumpedOffMap();
+
+		if (inputMagnitude.sqrMagnitude != 0.0f)
 			lastMoveDirection = inputMagnitude;
-		} 
 
-			//Modifies speed based on axis input
-			newSpeed = speedMod();
+		//Modifies speed based on axis input
+		newSpeed = speedMod();
 
-			//Different moves
-			block ();
-			//cancel these attacks while blocking
-			if (blocking == false) {
+		//Different moves
+		block ();
+		//cancel these attacks while blocking
+		if (!blocking) {
 			//eventually each of these should have a use case for when the player is blocking
 			basicAttack ();
 			chargeAttack ();
-			}
+		}
 
 
 		//Ground Based Movement;
@@ -140,7 +144,7 @@ public class playerMovement : damageControl {
 				if (moveDirection.sqrMagnitude > 0) { 
 					myAnimation.SetBool("Run", true); //Changes avatar to running state
 					var targetRotation = Quaternion.LookRotation(moveDirection); //set target towards direction of motion
-						if (blocking == false) {
+						if (!blocking) {
 							lockRotation = targetRotation;
 							child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
 							myRotation = child.rotation;
@@ -154,7 +158,7 @@ public class playerMovement : damageControl {
 		if (Input.GetButtonDown(myJump)) {
 			moveDirection.y = jumpSpeed;
 			myAudio.PlayOneShot(mySounds[0]);
-			}
+		}
 
 		//Air based movement
 		} else {
@@ -173,33 +177,31 @@ public class playerMovement : damageControl {
 					Vector3 lookatMoveDirection = new Vector3(	moveDirection.x, 0, moveDirection.z);
 					if (inputMagnitude.sqrMagnitude > 0.5f) {
 						var targetRotation = Quaternion.LookRotation(lookatMoveDirection); //set target towards direction of motion
-						if (blocking == false) {
-								lockRotation = targetRotation;
-								child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
-								myRotation = child.rotation;
-							}
+						if (!blocking) {
+							lockRotation = targetRotation;
+							child.rotation = child.rotation.EaseTowards(targetRotation, turnSpeed); //rotate towards the direction of motion
+							myRotation = child.rotation;
 						}
-				}  else {
-					myAnimation.SetBool ("Run", false); 
 					}
+				} else {
+					myAnimation.SetBool ("Run", false); 
 				}
 			}
+		}
 
-			if (imDead == false && triggerDeath == false) { //Checking for healing as long as i'm not dead!
-				healingTime();
-			}
-		
+		if (!imDead && !triggerDeath) //Checking for healing as long as i'm not dead!
+			healingTime();
+
 		//Controls Gravity
 		moveDirection.y -= gravity * Time.deltaTime;
-		if (charging == true) {
-				controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
-		} else if (blockStun == true) {
-				controller.Move(slideBack * Time.deltaTime);
-		} else {
-				controller.Move(moveDirection * Time.deltaTime);
-			}
-		}
-		playerPos = this.gameObject.transform.position;
+		if (charging)
+			controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
+		else if (blockStun)
+			controller.Move(slideBack * Time.deltaTime);
+		else
+			controller.Move(moveDirection * Time.deltaTime);
+
+		playerPos = gameObject.transform.position;
 	}
 
 	//Thank Alex Austin for making this work!
@@ -211,11 +213,10 @@ public class playerMovement : damageControl {
 		var vertAbs = Mathf.Abs(Vertical);
 		float angle = 0;
 		//do some math...
-		if (horAbs > vertAbs) { 
+		if (horAbs > vertAbs)
 			angle = Mathf.Atan2(vertAbs, horAbs); 
-		} else {
+		else
 			angle = Mathf.Atan2(horAbs, vertAbs);
-		}
 		newSpeed = Mathf.Cos(angle);
 		newSpeed *= speed;
 		//It magically works!
@@ -223,7 +224,7 @@ public class playerMovement : damageControl {
 	}
 
 	void basicAttack () { //Basic Attacking Function
-		if (Input.GetButtonDown(myFire1) && nextAttack == true) {
+		if (Input.GetButtonDown(myFire1) && nextAttack) {
 			//Enable the attack graphic & the corresponding attack animation.
 			myAudio.PlayOneShot(mySounds[1]);
 			myAttack.SetActive(true); //This is a prefab instance which must be assigned in the editor
@@ -238,14 +239,14 @@ public class playerMovement : damageControl {
 	}
 
 	void chargeAttack () { //Pretty self explanitory i think...
-		if (charging == false) {
+		if (!charging) {
 			//placeholder?
 		}
-		if (Input.GetButtonDown(myFire2) && nextAttack == true) {
+		if (Input.GetButtonDown(myFire2) && nextAttack) {
 			//Get facing direction, and charge forward quickly. 
 			//bool startCharge = false; 
 			charging = true;
-			if (startCharge == false) {
+			if (!startCharge) {
 				myAudio.PlayOneShot(mySounds[2]);
 				if (inputMagnitude.sqrMagnitude == 0) {
 					Horizontal = lastMoveDirection.x;
@@ -253,18 +254,14 @@ public class playerMovement : damageControl {
 				}
 
 				//This group of statements forces the inputs to go to their maximum
-				if (Horizontal > 0) {
+				if (Horizontal > 0)
 					Horizontal = 1;
-				}
-				if (Horizontal < 0) { 
+				if (Horizontal < 0)
 					Horizontal = -1;
-				}
-				if (Vertical > 0) {	
+				if (Vertical > 0)
 					Vertical = 1;
-				}
-				if (Vertical < 0) { 
+				if (Vertical < 0)
 					Vertical = -1;
-				}
 
 				//This Vector3 is used for the charge attack
 				attackDirection = new Vector3 (Horizontal, 0, Vertical);
@@ -273,7 +270,7 @@ public class playerMovement : damageControl {
 				}
 				startCharge = true;
 			}
-			if (startCharge == true) {
+			if (startCharge) {
 				myChargeAttack.SetActive(true); //This is a prefab instance which must be assigned in the editor
 				moveDirection = transform.TransformDirection(attackDirection).normalized;
 				StartCoroutine("chargeTime");
@@ -295,7 +292,7 @@ public class playerMovement : damageControl {
 			myShield.SetActive(false);
 		}
 
-		if (blocking == true) {
+		if (blocking) {
 			speed = speedWhileBlocking;
 			foreach (Transform child in transform) {
 				child.rotation = lockRotation;
@@ -334,7 +331,7 @@ public class playerMovement : damageControl {
 
 	void playerDeath () { //Im dead, now what do i do?
 		//trigger death animation when you die...
-		if (triggerDeath == false) {
+		if (!triggerDeath) {
 			//myAnimation.SetBool("imDead", true);
 			myAnimation.Play("imDead");
 
@@ -348,15 +345,15 @@ public class playerMovement : damageControl {
 			triggerDeath = true;
 		}
 		//make the axis input zero so the player can't move. 
-		Horizontal = 0;
-		Vertical = 0;
+//		Horizontal = 0;
+//		Vertical = 0;
 	}
 
 	//Current revive player behavior: Living player hits a dead player with an attack multple times to revive them to full Health. 
 	//This is obviously temp...
 	public void reviveMe () {
 		//every time the player gits hit, wait a little bit before before they can get hit again
-		if (reviveDelay == false) {
+		if (!reviveDelay) {
 			//decrement the revive counter each time a hit registers. 
 			reviveCounter -= 1;
 			myMat.renderer.material = healMat;  //flash the heal material to indicate the player is being healed
@@ -387,7 +384,7 @@ public class playerMovement : damageControl {
 	void OnTriggerEnter (Collider other) {
 		var safeZone = other.collider.GetComponent<safeZone>();
 		//check to see if the safe zone is present and active
-		if (safeZone && safeZone.disableProtection == false) {
+		if (safeZone && !safeZone.disableProtection) {
 			healActive = true;
 			Debug.Log("I am now in the safe zone");
 		}
@@ -403,15 +400,16 @@ public class playerMovement : damageControl {
 	}
 
 	void healingTime () {
-		if (healActive == true) {
+		if (healActive) {
 			healingEffect.SetActive(true);
 		}
-		if (healActive == true && triggerHeal == false) {
+
+		if (healActive && !triggerHeal) {
 			triggerHeal = true;
 			StartCoroutine("healing");
 		}
 
-		if (safeZone.disableProtection == true) {
+		if (safeZone.disableProtection) {
 			healActive = false;
 			Debug.Log("I am not safe anymore!");
 			healingEffect.SetActive(false);
@@ -435,7 +433,7 @@ public class playerMovement : damageControl {
 		//Play blocking sound
 		myAudio.PlayOneShot(mySounds[3]);
 		blockStun = true;
-		if (triggerBlockStun == false) {
+		if (!triggerBlockStun) {
 			//stun player movement, and make them slide backward a tiny bit. 
 			var meXZ = new Vector3(transform.position.x, 0, transform.position.z);
 			var themXZ = new Vector3(baddieDirection.x, 0, baddieDirection.z);
@@ -443,9 +441,9 @@ public class playerMovement : damageControl {
 		}
 		//var slideLerp = Vector3.Lerp(transform.position, slideBack, 0);
 		//slideBack = slideLerp;
-		if (blockStun == true && triggerBlockStun == false) {
-						StartCoroutine("cancelStun");
-						triggerBlockStun = true;
+		if (blockStun && !triggerBlockStun) {
+			StartCoroutine("cancelStun");
+			triggerBlockStun = true;
 		}
 		//if (blockStun == true) {
 			//float decelration = 0.9f;
@@ -457,5 +455,33 @@ public class playerMovement : damageControl {
 		yield return new WaitForSeconds (0.1f);
 		blockStun = false;
 		triggerBlockStun = false;
+	}
+
+	void CheckIfPlayerJumpedOffMap()
+	{
+		if(GroundBelow())
+			lastPositionOnGround = playerPos;
+		else if(playerPos.y < -10) {
+			followedByCamera = false;
+			
+			if(playerPos.y < -100)
+				DieFromJumpingOffMap();
+		}
+	}
+
+	void RespawnPlayer(Vector3 respawnPosition) {
+		myHP = myMaxHp;
+		controller.transform.position = respawnPosition;
+	}
+
+	void DieFromJumpingOffMap() {
+		RespawnPlayer(lastPositionOnGround);
+		followedByCamera = true;
+	}
+
+	bool GroundBelow() {
+		RaycastHit hitInfo;
+
+		return Physics.Raycast(new Ray(playerPos, Vector3.down), out hitInfo, 1000);
 	}
 }
