@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class cameraFX : MonoBehaviour {
+public class cameraFX : Math3d {
 
 	Transform myLeader;
 	Vector3 cameraTarget;
@@ -15,22 +15,27 @@ public class cameraFX : MonoBehaviour {
 	public float zoomCeiling = 50f;
 	public float zoomScaling = 1;
 
-	public GameObject holdCamera;
-	private Camera battleCam;
-	private Plane[] fPlanes;
-	private int planeIndex;
-	private GameObject[] fpObjects;
-
-	private Collider[] playerColliders;
-
 	Vector3 zoomOffset;
-
+	
 	float playerDistances;
 	float storeZoom; 
 	Transform playerCenter;
-
+	
 	bool arenaCam = false;
 	bool walkerMode;
+
+	public GameObject holdCamera; //this is the game object holding the camera
+	private Camera battleCam; //This is a reference to the camera component to the game object holding the camrea
+
+	//=====Clamp players to camera view
+	private Plane[] fPlanes; //The frustum planes of the main camera, used to calculate the edge of the screen for the players
+	private int planeIndex; //used for frustrum planes
+	private GameObject[] fpObjects; //create a gameobject containing the plane we just created
+
+	private Plane playableSurface; //the area perpendicular to the y axis (up) players can move in
+	private GameObject surfaceHolder;
+
+	private Collider[] playerColliders;
 
 	//=======DEBUG STUFF=========
 	public bool showCameraTarget;
@@ -57,6 +62,11 @@ public class cameraFX : MonoBehaviour {
 			fpObjects[i].transform.rotation = Quaternion.FromToRotation(Vector3.up, fPlanes[i].normal);
 			i++;
 		}
+
+		playableSurface = new Plane();
+		surfaceHolder = GameObject.CreatePrimitive(PrimitiveType.Plane);
+		surfaceHolder.transform.position = Vector3.zero;
+		surfaceHolder.transform.rotation = Quaternion.LookRotation(Vector3.forward);
 	}
 
 	void Start () {
@@ -95,11 +105,11 @@ public class cameraFX : MonoBehaviour {
 
 		fPlanes = new Plane[planeIndex];
 		fPlanes = GeometryUtility.CalculateFrustumPlanes(battleCam);
-		int derp = 0;
-		while (derp < fPlanes.Length) {
-			fpObjects[derp].transform.position = -fPlanes[derp].normal * fPlanes[derp].distance;
-			fpObjects[derp].transform.rotation = Quaternion.FromToRotation(Vector3.up, fPlanes[derp].normal);
-			derp++;
+		int j = 0;
+		while (j < fPlanes.Length) {
+			fpObjects[j].transform.position = -fPlanes[j].normal * fPlanes[j].distance;
+			fpObjects[j].transform.rotation = Quaternion.FromToRotation(Vector3.up, fPlanes[j].normal);
+			j++;
 		}
 
 		for (int i = 0; i < playerColliders.Length; i++) {
@@ -162,10 +172,21 @@ public class cameraFX : MonoBehaviour {
 		}
 
 		//send a ray from the camera center to each frustum edge, 
+		surfaceHolder.transform.position = cameraTarget;
 		RaycastHit hit;
 		for (int i = 0; i < fPlanes.Length; i ++) {
 			//Physics.Raycast(transform.position, Vector3.down, out hit);
 			Debug.DrawRay(cameraTarget, fpObjects[i].transform.position, Color.blue);
+		}
+	}
+
+	//calculate the edges for the edge of screen colliders
+	void boundingSurface () {
+
+		Vector3[] boundingLines = new Vector3[4];
+		for (int i = 0; i < boundingLines.Length; i++) {
+			boundingLines[i] = PlanePlaneIntersection(surfaceHolder.transform.rotation, surfaceHolder.transform.position, fpObjects[i].transform.rotation, fpObjects[i].transform.position);
+
 		}
 	}
 
