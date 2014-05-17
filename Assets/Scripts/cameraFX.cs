@@ -185,7 +185,7 @@ public class cameraFX : Math3d {
 
 		Vector3[] boundingLines = new Vector3[4];
 		for (int i = 0; i < boundingLines.Length; i++) {
-			boundingLines[i] = PlanePlaneIntersection(surfaceHolder.transform.rotation, surfaceHolder.transform.position, fpObjects[i].transform.rotation, fpObjects[i].transform.position);
+			//boundingLines[i] = PlanePlaneIntersection(surfaceHolder.transform.rotation, surfaceHolder.transform.position, fpObjects[i].transform.rotation, fpObjects[i].transform.position);
 
 		}
 	}
