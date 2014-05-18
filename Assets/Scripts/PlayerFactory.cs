@@ -6,58 +6,36 @@ public class PlayerFactory : MonoBehaviour {
 	public Material[] materials;
 	public Color[] colors;
 
-	RowPositions positions;
+	List<Player> players;
 
 	// Creates a number of player GameObjects from playerPrefab
 	public GameObject[] CreatePlayers(playerClass[] playerClasses) {
-		positions = new RowPositions(playerClasses.Length);
-		List<GameObject> players = new List<GameObject>();
+		AyloDebug.Assert(playerClasses.Length <= 8);
 
-		for(int i = 0; i < playerClasses.Length; i++) {
-			var player = (GameObject)Instantiate(playerPrefab);
+		players = new List<Player>();
+		var positions = new RowPositions(playerClasses.Length);
+
+		for(uint i = 0; i < playerClasses.Length; i++) {
+			var playerGameObject = (GameObject)Instantiate(playerPrefab);
+			var player = new Player(playerGameObject, i, playerClasses[i]);
+
+			player.material = new PlayerMaterial(materials[i], colors[i]);
+			player.position = positions.GetNextPosition();
+
 			players.Add(player);
-
-			SetPlayerPosition(player);
-			SetPlayerMaterial(player, i);
-			SetPlayerNumber(player, i);
-			SetPlayerClass(player, playerClasses[i]);
-			SetPlayerInfoColor(i);
 		}
 
-		return players.ToArray();
+		// this is temporary
+		var playerGameObjects = new List<GameObject>();
+		foreach(var player in players)
+			playerGameObjects.Add(player.gameObject);
+		return playerGameObjects.ToArray();
 	}
 
-	void SetPlayerPosition(GameObject player) {
-		player.transform.position = positions.GetNextPosition();
-	}
-
-	void SetPlayerMaterial(GameObject player, int iPlayer) {
-		Material material = materials[iPlayer];
-		player.GetComponentInChildren<SkinnedMeshRenderer>().material = material;
-		player.GetComponent<playerMovement>().storeMat = material;
-
-		var directionIndicatorMaterial = player.transform.Find("FX").Find("direction").gameObject.GetComponent<MeshRenderer>().material;
-		directionIndicatorMaterial.color = colors[iPlayer];
-	}
-
-	void SetPlayerNumber(GameObject player, int iPlayer) {
-		player.GetComponent<playerMovement>().thisPlayer = PlayerNumConverter.IndexToPlayerNum(iPlayer);
-	}
-
-	void SetPlayerClass(GameObject player, playerClass c) {
-		player.GetComponent<playerMovement>().myClass = c;
-	}
-
-	void SetPlayerInfoColor(int iPlayer)
+	void SetPlayerInfoColor(uint iPlayer)
 	{
 		foreach(var playerInfo in GameObject.FindGameObjectsWithTag("PlayerInfo")) {
 			var stats = playerInfo.GetComponent<displayPlayerStats>();
-
-			if(PlayerNumConverter.PlayerNumToIndex(stats.displayNum) == iPlayer) {
-//				stats.showName = "p" + (iPlayer + 1);
-				var textMesh = playerInfo.GetComponent<TextMesh>();
-				textMesh.color = colors[iPlayer];
-			}
 		}
 	}
 }
@@ -72,10 +50,14 @@ public class RowPositions {
 	int nPositions;
 
 	public RowPositions(int nPositions) {
+		AyloDebug.Assert(nPositions > 0);
+
 		this.nPositions = nPositions;
 	}
 
 	public Vector3 GetNextPosition() {
+		AyloDebug.Assert(currentPosition < nPositions);
+
 		var row = currentPosition / columns;
 		var isLastRow = row == nPositions / columns;
 		var rowSize = isLastRow && nPositions % columns != 0 ? nPositions % columns : columns;
@@ -94,6 +76,7 @@ public class RowPositions {
 }
 
 // Used to convert between playerNum enums and their corresponding (zero based) integers
+// Hopefully just a temporary solution
 public class PlayerNumConverter {
 	static playerNum[] indexToPlayerNum = new playerNum[] {
 		playerNum.PLAYER1,
@@ -106,7 +89,7 @@ public class PlayerNumConverter {
 		playerNum.PLAYER8
 	};
 
-	static Dictionary<playerNum, int> playerNumToIndex = new Dictionary<playerNum, int> {
+	static Dictionary<playerNum, uint> playerNumToIndex = new Dictionary<playerNum, uint> {
 		{playerNum.PLAYER1, 0},
 		{playerNum.PLAYER2, 1},
 		{playerNum.PLAYER3, 2},
@@ -117,11 +100,13 @@ public class PlayerNumConverter {
 		{playerNum.PLAYER8, 7},
 	};
 
-	public static playerNum IndexToPlayerNum(int i) {
+	public static playerNum IndexToPlayerNum(uint i) {
+		AyloDebug.Assert(i < indexToPlayerNum.Length);
+
 		return indexToPlayerNum[i];
 	}
 
-	public static int PlayerNumToIndex(playerNum p) {
+	public static uint PlayerNumToIndex(playerNum p) {
 		return playerNumToIndex[p];
 	}
 }
