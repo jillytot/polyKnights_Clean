@@ -183,9 +183,12 @@ public class cameraFX : Math3d {
 	//calculate the edges for the edge of screen colliders
 	void boundingSurface () {
 
-		Vector3[] boundingLines = new Vector3[4];
-		for (int i = 0; i < boundingLines.Length; i++) {
-			//boundingLines[i] = PlanePlaneIntersection(surfaceHolder.transform.rotation, surfaceHolder.transform.position, fpObjects[i].transform.rotation, fpObjects[i].transform.position);
+		Vector3[] linePoints = new Vector3[4];
+		Vector3[] lineVectors = new Vector3[4];
+		for (int i = 0; i < linePoints.Length; i++) {
+//			PlanePlaneIntersection(linePoints[i], lineVectors[i], 
+//			                       surfaceHolder.transform.rotation, surfaceHolder.transform.position, 
+//			                       fpObjects[i].transform.rotation, fpObjects[i].transform.position);
 
 		}
 	}
