@@ -42,6 +42,8 @@ public class cameraFX : Math3d {
 	bool triggerShowTarget;
 	public GameObject showTarget;
 	GameObject showTargetInst;
+	public bool showFrustumPlanes;
+	bool storeShowPlanes;
 	//============================
 	
 	//TODO: clamp player positions to camera max boundry. - Since the camera is at a tilt, using it's frustrum boundary will mess with movement in Y,
@@ -62,14 +64,28 @@ public class cameraFX : Math3d {
 			fpObjects[i].transform.rotation = Quaternion.FromToRotation(Vector3.up, fPlanes[i].normal);
 			i++;
 		}
-
+		if (fpObjects.Length > 0) {
+			for (int j = 0; j < fpObjects.Length; j++) {
+				Collider planeCollider = fpObjects[j].gameObject.GetComponent<Collider>();
+				planeCollider.enabled = false;
+				MeshRenderer planeRender = fpObjects[j].gameObject.GetComponent<MeshRenderer>();
+				planeRender.enabled = false;
+			}
+		}
 		playableSurface = new Plane();
 		surfaceHolder = GameObject.CreatePrimitive(PrimitiveType.Plane);
 		surfaceHolder.transform.position = Vector3.zero;
 		surfaceHolder.transform.rotation = Quaternion.LookRotation(Vector3.forward);
 	}
 
+
+
 	void Start () {
+
+		Collider surfaceCollider = surfaceHolder.gameObject.GetComponent<Collider>();
+		surfaceCollider.enabled = false;
+		MeshRenderer surfaceRender = surfaceHolder.gameObject.GetComponent<MeshRenderer>();
+		surfaceRender.renderer.enabled = false;
 
 		playerColliders = new Collider[gameMaster.getPlayers.Length];
 		for (int i = 0; i < gameMaster.getPlayers.Length; i++) {
@@ -178,6 +194,7 @@ public class cameraFX : Math3d {
 			//Physics.Raycast(transform.position, Vector3.down, out hit);
 			Debug.DrawRay(cameraTarget, fpObjects[i].transform.position, Color.blue);
 		}
+		togglePlanes();
 	}
 
 	//calculate the edges for the edge of screen colliders
@@ -268,5 +285,39 @@ public class cameraFX : Math3d {
 		float weightZ = (Walker.z + averageWith.z) / checkPlayers;
 		Vector3 weightedTarget = new Vector3(weightX, weightY, weightZ);
 		return weightedTarget;
+	}
+
+	void togglePlanes () {
+		
+		if (!showFrustumPlanes && showFrustumPlanes != storeShowPlanes) {
+			if (fpObjects.Length > 0) {
+				for (int i = 0; i < fpObjects.Length; i++) {
+					Collider planeCollider = fpObjects[i].gameObject.GetComponent<Collider>();
+					planeCollider.enabled = false;
+					MeshRenderer planeRender = fpObjects[i].gameObject.GetComponent<MeshRenderer>();
+					planeRender.enabled = false;
+				}
+			}
+			if (surfaceHolder) {
+				Collider surfaceCollider = surfaceHolder.gameObject.GetComponent<Collider>();
+				surfaceCollider.enabled = false;
+				MeshRenderer surfaceRender = surfaceHolder.gameObject.GetComponent<MeshRenderer>();
+				surfaceRender.enabled = false;
+			}
+		} 
+		
+		if (showFrustumPlanes && showFrustumPlanes != storeShowPlanes) {
+			if (fpObjects.Length > 0) {
+				for (int i = 0; i < fpObjects.Length; i++) {
+					MeshRenderer planeRender = fpObjects[i].gameObject.GetComponent<MeshRenderer>();
+					planeRender.enabled = true;
+				}
+			}
+			if (surfaceHolder) {
+				MeshRenderer surfaceRender = surfaceHolder.gameObject.GetComponent<MeshRenderer>();
+				surfaceRender.enabled = true;
+			}
+		} 
+		storeShowPlanes = showFrustumPlanes;
 	}
 }
