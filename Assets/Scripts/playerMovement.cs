@@ -205,6 +205,48 @@ public class playerMovement : damageControl {
 		playerPos = gameObject.transform.position;
 	}
 
+	void LateUpdate () {
+		if (cameraFX.triggerBounds) {
+		lockPlayerInCamera();
+		}
+	}
+
+	//Locks the player in view of the camera
+	void lockPlayerInCamera () {
+		if (transform.position.z > cameraFX.boundNorth.z) {
+			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundNorth.z);
+			transform.position = inBounds;
+			//controller.transform.position = inBounds;
+//			if (Vertical > -1) {
+//				Vertical = -1;
+//			}
+		}
+		if (transform.position.z < cameraFX.boundSouth.z) {
+			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundSouth.z);
+			transform.position = inBounds;
+			//controller.transform.position = inBounds;
+//			if (Vertical < 1) {
+//				Vertical = 1;
+//			}
+		}
+		if (transform.position.x > cameraFX.boundEast.x) {
+			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundEast.x);
+			transform.position = inBounds;
+			//controller.transform.position = inBounds;
+//			if (Horizontal > -1) {
+//				Horizontal = -1;
+//			}
+		}
+		if (transform.position.x < cameraFX.boundWest.x) {
+			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundWest.x);
+			transform.position = inBounds;
+			//controller.
+//			if (Horizontal < 1) {
+//				Horizontal = 1;
+//			}
+		}
+	}
+
 	//Thank Alex Austin for making this work!
 	//This controls the speed while using a radial axis analogue stick so that it's constant in any degree at any velocity
 	//With this method you don't need to normalize your movement vectors

@@ -37,6 +37,11 @@ public class cameraFX : Math3d {
 
 	private Collider[] playerColliders;
 
+	public static Vector3 boundNorth;
+	public static Vector3 boundSouth;
+	public static Vector3 boundEast;
+	public static Vector3 boundWest;
+
 	//=======DEBUG STUFF=========
 	public bool showCameraTarget;
 	bool triggerShowTarget;
@@ -44,6 +49,8 @@ public class cameraFX : Math3d {
 	GameObject showTargetInst;
 	public bool showFrustumPlanes;
 	bool storeShowPlanes;
+	public bool keepPlayerInCamera;
+	public static bool triggerBounds;
 	//============================
 	
 	//TODO: clamp player positions to camera max boundry. - Since the camera is at a tilt, using it's frustrum boundary will mess with movement in Y,
@@ -76,6 +83,8 @@ public class cameraFX : Math3d {
 		surfaceHolder = GameObject.CreatePrimitive(PrimitiveType.Plane);
 		surfaceHolder.transform.position = Vector3.zero;
 		surfaceHolder.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+
+		boundingSurface();
 	}
 
 
@@ -118,7 +127,7 @@ public class cameraFX : Math3d {
 	}
 	
 	void Update () {
-
+		triggerBounds = keepPlayerInCamera;
 		fPlanes = new Plane[planeIndex];
 		fPlanes = GeometryUtility.CalculateFrustumPlanes(battleCam);
 		int j = 0;
@@ -195,19 +204,29 @@ public class cameraFX : Math3d {
 			Debug.DrawRay(cameraTarget, fpObjects[i].transform.position, Color.blue);
 		}
 		togglePlanes();
+		boundingSurface();
 	}
 
 	//calculate the edges for the edge of screen colliders
 	void boundingSurface () {
-
 		Vector3[] linePoints = new Vector3[4];
 		Vector3[] lineVectors = new Vector3[4];
 		for (int i = 0; i < linePoints.Length; i++) {
-//			PlanePlaneIntersection(linePoints[i], lineVectors[i], 
-//			                       surfaceHolder.transform.rotation, surfaceHolder.transform.position, 
-//			                       fpObjects[i].transform.rotation, fpObjects[i].transform.position);
-
+			PlanePlaneIntersection( 
+			                       out linePoints[i],
+			                       out lineVectors[i],
+			                       surfaceHolder.transform.rotation * Vector3.up, 
+			                       surfaceHolder.transform.position, 
+			                       fpObjects[i].transform.rotation *Vector3.up, 
+			                       fpObjects[i].transform.position);
+			Debug.DrawRay(linePoints[i], lineVectors[i] * 100, Color.cyan);
+			Debug.DrawRay(linePoints[i], lineVectors[i] * -100, Color.cyan);
+			Debug.Log("Camera Boundary " + i + " = " + linePoints[i]);
 		}
+		boundNorth = linePoints[3];
+		boundSouth = linePoints[2];
+		boundEast = linePoints[1];
+		boundWest = linePoints[0];
 	}
 
 	Vector3 averageCenter() {
