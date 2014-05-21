@@ -221,37 +221,62 @@ public class playerMovement : damageControl {
 
 	//Locks the player in view of the camera
 	void lockPlayerInCamera () {
+		float findY =0;
+		RaycastHit hit;
+
+		//returns true if the player is out of bounds in any direction
+		bool overNorth = false;
+		bool overSouth = false;
+		bool overEast = false;
+		bool overWest = false;
+
+		Vector3 castFrom =new Vector3 (transform.position.x, transform.position.y + 0.1f, transform.position.z);
+		//Debug.DrawRay(transform.position, Vector3.down, Color.blue, 2);
+		if (Physics.Raycast(castFrom, Vector3.up, out hit, maxFallRate)) {
+			findY = hit.transform.position.y + 0.1f;
+			fallRate = 0;
+		}
+		else {
+			findY = transform.position.y;
+		}
+
 		if (transform.position.z > cameraFX.boundNorth.z) {
-			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundNorth.z);
-			transform.position = inBounds;
-			//controller.transform.position = inBounds;
-//			if (Vertical > -1) {
-//				Vertical = -1;
-//			}
+			if (!imDead && !triggerDeath) {
+				var inBounds = new Vector3(transform.position.x, findY, cameraFX.boundNorth.z);
+				transform.position = inBounds;
+			}
+			overNorth = true;
 		}
 		if (transform.position.z < cameraFX.boundSouth.z) {
-			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundSouth.z);
-			transform.position = inBounds;
-			//controller.transform.position = inBounds;
-//			if (Vertical < 1) {
-//				Vertical = 1;
-//			}
+			if (!imDead && !triggerDeath) {
+				var inBounds = new Vector3(transform.position.x, findY, cameraFX.boundSouth.z);
+				transform.position = inBounds;
+			}
+			overSouth = true;
 		}
 		if (transform.position.x > cameraFX.boundEast.x) {
-			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundEast.x);
-			transform.position = inBounds;
-			//controller.transform.position = inBounds;
-//			if (Horizontal > -1) {
-//				Horizontal = -1;
-//			}
+			if (!imDead && !triggerDeath) {
+				var inBounds = new Vector3(transform.position.x, findY, cameraFX.boundEast.x);
+				transform.position = inBounds;
+			}
+			overEast = true;
 		}
 		if (transform.position.x < cameraFX.boundWest.x) {
-			var inBounds = new Vector3(transform.position.x, transform.position.y, cameraFX.boundWest.x);
-			transform.position = inBounds;
-			//controller.
-//			if (Horizontal < 1) {
-//				Horizontal = 1;
-//			}
+			if (!imDead && !triggerDeath) {
+				var inBounds = new Vector3(transform.position.x, findY, cameraFX.boundWest.x);
+				transform.position = inBounds;
+			}
+			overWest = true;
+		}
+
+		if (overNorth || overSouth || overEast || overWest) {
+			outOfBounds = true;
+			Debug.Log("You are out of bounds yo!");
+		}
+		else {
+			if (!imDead && !triggerDeath) {
+			outOfBounds = false;
+			}
 		}
 	}
 

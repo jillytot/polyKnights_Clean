@@ -15,6 +15,7 @@ public class damageControl : MonoBehaviour {
 	public GameObject healingEffect; //the healing effect that is active while the player is being healed. 
 
 	public bool imDead; //When you are dead, you are dead...
+	public bool outOfBounds; // when you are out of camera bounds
 	
 	// Use this for initialization
 	void Start () {
@@ -41,7 +42,7 @@ public class damageControl : MonoBehaviour {
 			myHP -= attack;
 			imHit = true;
 			StartCoroutine("hitRefreshTimer");
-			Debug.Log("i've been hit!");
+			//Debug.Log("i've been hit!");
 
 			myMat.renderer.material = hitMat;
 
@@ -49,7 +50,7 @@ public class damageControl : MonoBehaviour {
 
 		if (myHP <= 0) {
 
-			Debug.Log("You are already deeeaaadd!");
+			//Debug.Log("You are already deeeaaadd!");
 			imDead = true;
 
 		} else {
@@ -70,7 +71,7 @@ public class damageControl : MonoBehaviour {
 		yield return new WaitForSeconds(hitRefresh);
 		imHit = false;
 		myMat.renderer.material = storeMat;
-		Debug.Log("Time to get hit again!");
+		//Debug.Log("Time to get hit again!");
 
 	}
 }

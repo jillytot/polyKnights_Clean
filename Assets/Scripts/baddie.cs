@@ -158,7 +158,7 @@ public class baddie : MonoBehaviour {
 				}
 			}
 			gameMaster.killCount[killIndex] += 1;
-			Debug.Log(hitByPlayer + " has killed: " +  gameMaster.killCount[killIndex] + " Enemies");
+			//Debug.Log(hitByPlayer + " has killed: " +  gameMaster.killCount[killIndex] + " Enemies");
 			//drop embers upon death
 			int randomNum = Random.Range(1,100);
 			if (randomNum < 15) {

@@ -3,26 +3,26 @@ using System.Collections;
 
 public class cameraFX : Math3d {
 
-	Transform myLeader;
-	Vector3 cameraTarget;
-	Vector3 offset;
-	float altitude;
+	Transform myLeader; //used for choosing the camera target
+	Vector3 cameraTarget; //what the camera is actually tracking
+	Vector3 offset; //When the camera is started in the scene, it saves it's position relative to the cameraTarget, and maintains that offset during play
+	float altitude; //Camera's vertical value saved. 
 
-	public float camSpeed = 1.0f;
-	public float zoomSpeed = 2.0f;
+	public float camSpeed = 1.0f; //How fast the camera tracks it's target
+	public float zoomSpeed = 2.0f; //How quickly the camera zooms in and out
 
-	public float zoomFloor = 15f;
-	public float zoomCeiling = 50f;
-	public float zoomScaling = 1;
+	public float zoomFloor = 15f; //The most the camera will zoom in
+	public float zoomCeiling = 50f; //the most the camera will zoom out
+	public float zoomScaling = 1; //the current zoom level of the camera between zoomFloor and zoomCeiling
 
-	Vector3 zoomOffset;
+	Vector3 zoomOffset; //the initial zoom the camera starts at
 	
-	float playerDistances;
-	float storeZoom; 
-	Transform playerCenter;
+	float playerDistances; //used to calculate camera target for multiple players
+	float storeZoom; //used to calcuate camera zooming
+	Transform playerCenter; //averaged position of all tracked players
 	
-	bool arenaCam = false;
-	bool walkerMode;
+	bool arenaCam = false; //if arena cam is true, the camera will move more freely
+	bool walkerMode; //If the walker is present, then the camera will take them into account for calculations
 
 	public GameObject holdCamera; //this is the game object holding the camera
 	private Camera battleCam; //This is a reference to the camera component to the game object holding the camrea
@@ -34,9 +34,10 @@ public class cameraFX : Math3d {
 
 	private Plane playableSurface; //the area perpendicular to the y axis (up) players can move in
 	private GameObject surfaceHolder;
+	
+	private Collider[] playerColliders; //the colliders of all the players. May no longer be needed...
 
-	private Collider[] playerColliders;
-
+	//These represent the egdes of the viewable camera frame
 	public static Vector3 boundNorth;
 	public static Vector3 boundSouth;
 	public static Vector3 boundEast;
@@ -53,10 +54,8 @@ public class cameraFX : Math3d {
 	public static bool triggerBounds;
 	//============================
 	
-	//TODO: clamp player positions to camera max boundry. - Since the camera is at a tilt, using it's frustrum boundary will mess with movement in Y,
-	//I will try calculating the fustrum in x and z where it meets the camera target, but draw the collision plains parallel to the y axis instead of pointed toward the camera
-	//TODO: camera doesn't follow players falling off edges
 	//TODO: the camera can only move so far away from the walker before stopping. 
+	//TODO: Camera stops tracking dead players out of camera bounds.
 
 	void Awake () {
 		battleCam = holdCamera.gameObject.GetComponent<Camera>();
@@ -86,9 +85,7 @@ public class cameraFX : Math3d {
 
 		boundingSurface();
 	}
-
-
-
+	
 	void Start () {
 
 		Collider surfaceCollider = surfaceHolder.gameObject.GetComponent<Collider>();
@@ -128,6 +125,7 @@ public class cameraFX : Math3d {
 	
 	void Update () {
 		triggerBounds = keepPlayerInCamera;
+		//we need to draw new planes to calculate the camera boundary for each update
 		fPlanes = new Plane[planeIndex];
 		fPlanes = GeometryUtility.CalculateFrustumPlanes(battleCam);
 		int j = 0;
@@ -137,15 +135,7 @@ public class cameraFX : Math3d {
 			j++;
 		}
 
-		for (int i = 0; i < playerColliders.Length; i++) {
-
-				if (GeometryUtility.TestPlanesAABB(fPlanes, playerColliders[i].collider.bounds)) {
-					Debug.Log("Player has hit edge");
-				} else { 
-					Debug.Log("nothing has been detected");
-			}
-		}
-
+		//chose camera target based on game settings
 		if (myLeader) { 
 			if (arenaCam == true) {
 				if (gameMaster.playerTransforms.Length > 1) {
@@ -221,8 +211,10 @@ public class cameraFX : Math3d {
 			                       fpObjects[i].transform.position);
 			Debug.DrawRay(linePoints[i], lineVectors[i] * 100, Color.cyan);
 			Debug.DrawRay(linePoints[i], lineVectors[i] * -100, Color.cyan);
-			Debug.Log("Camera Boundary " + i + " = " + linePoints[i]);
+			//Debug.Log("Camera Boundary " + i + " = " + linePoints[i]);
 		}
+
+		//TODO:not sure if these results are always consistent, they might need to be sorted.
 		boundNorth = linePoints[3];
 		boundSouth = linePoints[2];
 		boundEast = linePoints[1];
@@ -255,8 +247,17 @@ public class cameraFX : Math3d {
 		float maxX = 0;
 		float maxY = 0;
 		float maxZ = 0;
+		var closestIndex = -1;
 		for (int i = 0; i < gameMaster.playerTransforms.Length; i++) {
-			if (i == 0) {
+
+			if (gameMaster.getDamage[i].myHP < 1) {
+				//This is super useful
+				continue;
+			}
+			if (closestIndex == -1) {
+				closestIndex = i;
+			}
+			if (i == closestIndex) {
 				minX = gameMaster.playerTransforms[i].transform.position.x;
 				minY = gameMaster.playerTransforms[i].transform.position.y;
 				minZ = gameMaster.playerTransforms[i].transform.position.z;
