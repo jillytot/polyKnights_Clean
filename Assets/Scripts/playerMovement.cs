@@ -17,6 +17,8 @@ public class playerMovement : damageControl {
 
 	public float jumpSpeed = 30.0F; //How high you can jump in relation to gravity
 	public static float gravity = 120.0F; //how fast you fall
+	float fallRate = 0;
+	public float maxFallRate = 120.0F;
 	public float turnSpeed = 0.2f; //how fast you the player turns
 
 	public GameObject myAttack; //controls gameobject which executes the attack
@@ -135,6 +137,7 @@ public class playerMovement : damageControl {
 
 		//Ground Based Movement;
 		if (controller.isGrounded) {
+			fallRate = 0;
 			//Get axis inputs and * by speed
 			moveDirection = new Vector3(Horizontal, 0, Vertical);
 			moveDirection *= newSpeed;
@@ -194,7 +197,12 @@ public class playerMovement : damageControl {
 			healingTime();
 
 		//Controls Gravity
-		moveDirection.y -= gravity * Time.deltaTime;
+		fallRate = gravity * Time.deltaTime;
+		//cap the fallrate so players can fall through colliders
+		if (fallRate > maxFallRate) {
+			fallRate = 0;
+		}
+		moveDirection.y -= fallRate;
 		if (charging)
 			controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
 		else if (blockStun)
@@ -420,7 +428,7 @@ public class playerMovement : damageControl {
 		yield return new WaitForSeconds(0.1f);
 		reviveDelay = false;
 		myMat.renderer.material = storeMat; //returns the player material to the normal material
-		Debug.Log("Time to get hit again!");
+		//Debug.Log("Time to get hit again!");
 		
 	}
 
@@ -429,7 +437,7 @@ public class playerMovement : damageControl {
 		//check to see if the safe zone is present and active
 		if (safeZone && !safeZone.disableProtection) {
 			healActive = true;
-			Debug.Log("I am now in the safe zone");
+			//Debug.Log("I am now in the safe zone");
 		}
 	}
 
@@ -437,7 +445,7 @@ public class playerMovement : damageControl {
 		var notSafe = other.collider.GetComponent<safeZone>();
 		if (notSafe) {
 			healActive = false;
-			Debug.Log("I am not safe anymore!");
+			//Debug.Log("I am not safe anymore!");
 			healingEffect.SetActive(false);
 		}
 	}
@@ -454,7 +462,7 @@ public class playerMovement : damageControl {
 
 		if (safeZone.disableProtection) {
 			healActive = false;
-			Debug.Log("I am not safe anymore!");
+			//Debug.Log("I am not safe anymore!");
 			healingEffect.SetActive(false);
 		}
 	}
