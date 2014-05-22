@@ -202,6 +202,7 @@ public class playerMovement : damageControl {
 		if (fallRate > maxFallRate) {
 			fallRate = 0;
 		}
+		dontFallThroughGround();
 		moveDirection.y -= fallRate;
 		if (charging)
 			controller.Move(attackDirection * chargeSpeed * Time.deltaTime);
@@ -216,6 +217,21 @@ public class playerMovement : damageControl {
 	void LateUpdate () {
 		if (cameraFX.triggerBounds) {
 		lockPlayerInCamera();
+		}
+	}
+
+	//super hacky method to keep players from falling through the ground. Basically if there is nothing below them, they cannot fall.
+	void dontFallThroughGround () {
+
+		RaycastHit hit;
+		Vector3 castFrom =new Vector3 (transform.position.x, transform.position.y + 0.1f, transform.position.z);
+		//Debug.DrawRay(transform.position, Vector3.down, Color.blue, 2);
+		if (Physics.Raycast(castFrom, Vector3.down, out hit, maxFallRate)) {
+			//do nothing
+		}
+		else if (Physics.Raycast(castFrom, Vector3.up, out hit, maxFallRate)) {
+			fallRate = 0;
+			transform.position = castFrom;
 		}
 	}
 

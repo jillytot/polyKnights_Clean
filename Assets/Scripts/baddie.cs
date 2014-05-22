@@ -6,6 +6,7 @@ public class baddie : MonoBehaviour {
 	public enum enemyType { //possible basic enemy types 
 		DEFAULT,
 		SHOOTER,
+		CANNONHEAD,
 	}
 
 	public enemyType thisEnemyType; //enum for this enemy object
@@ -44,15 +45,16 @@ public class baddie : MonoBehaviour {
 
 	bool attackReady; //returns true when enemy is ready to attack
 
-	public bool moveOnGround; //If the enemy is a walker enemy
+	//============ BASIC MOVEMENT ============
 
-	//variables for smoothing enemy movement
+	public bool moveOnGround; //If the enemy is a walker enemy
 	private float smoothX = 0.0f;
 	private float smoothZ = 0.0f;
 	private float smoothY = 0.0f;
 	public float smoothTime = 0.3f;
 	
-	//Shooter specific behavior
+	//============FIRE ARROW==================
+
 	public bool shooter; //Enables this enemy to shoot arrows
 	bool targetLocked; //If shooter has target
 	Vector3 myTarget; //Location of target
@@ -62,7 +64,7 @@ public class baddie : MonoBehaviour {
 	public float arrowSpeed = 10.0f; //Speed at the projectile goes at
 	public float maxTargetRange = 50.0f; //maximum distance the projectile will fire.
 
-	//basic melee variables
+	//============BASIC MELEE==================
 
 	public bool meleeEnabled; //toggle on if you want the enemy to do a melee strike (requires groundMovement to be on)
 
@@ -71,6 +73,10 @@ public class baddie : MonoBehaviour {
 	Vector3 holdPosition; //position of the enemy at holdDistance from the target
 	Vector3 offsetToTarget; //difference in position between enemy and target
 	Vector3 chargeTarget; //direction of attack
+
+	//===========FORCE BEAM===================
+
+	public bool forceBeamEnabled;
 	
 	bool attacking; //used to disable other movement while attacking
 	bool attackDone; //returns true when attack is finished
@@ -426,4 +432,10 @@ public class baddie : MonoBehaviour {
 		}
 		triggerRefresh = false;
 	} 
+
+	void laserDood () {
+
+		//shoot a beam of energy that knocks player back, knock back is less while player is blocking, but still thar. 
+
+	}
 }
