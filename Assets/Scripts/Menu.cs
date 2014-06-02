@@ -9,15 +9,14 @@ namespace Gui {
 	//
 	// A MenuObserver object is used to call back to the user of the class.
 	public class Menu {
-		readonly MenuObserver observer;
-		readonly MenuInput input;
+		MenuObserver observer;
+		MenuInput input;
 		Dictionary<int, MenuItem> items = new Dictionary<int, MenuItem>();
 		MenuItem activeItem;
 		bool enabled;
 
-		public Menu(MenuObserver observer, MenuInput input, bool enabled) {
+		public Menu(MenuObserver observer, bool enabled) {
 			this.observer = observer;
-			this.input = input;
 			this.enabled = enabled;
 		}
 
@@ -28,6 +27,12 @@ namespace Gui {
 
 			set {
 				enabled = value;
+			}
+		}
+
+		public MenuInput Input {
+			set {
+				input = value;
 			}
 		}
 

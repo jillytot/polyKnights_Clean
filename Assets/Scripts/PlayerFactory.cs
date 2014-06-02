@@ -31,13 +31,6 @@ public class PlayerFactory : MonoBehaviour {
 			playerGameObjects.Add(player.gameObject);
 		return playerGameObjects.ToArray();
 	}
-
-	void SetPlayerInfoColor(uint iPlayer)
-	{
-		foreach(var playerInfo in GameObject.FindGameObjectsWithTag("PlayerInfo")) {
-			var stats = playerInfo.GetComponent<displayPlayerStats>();
-		}
-	}
 }
 
 // Simple class that assigns positions in rows in the XZ plane

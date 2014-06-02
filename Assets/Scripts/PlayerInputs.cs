@@ -1,27 +1,30 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 // Takes care of creating PlayerInput objects for the players.
 // 
 // TODO: This needs to be updated after we agree on how we're going to handle the input.
-public class PlayerInputs : MonoBehaviour {
-	public bool playerOneIsSpecial;
-	IList<PlayerInput> inputs;
+public class PlayerInputs : MonoBehaviour, IEnumerator, IEnumerable {
+	IList<PlayerInput> inputs = new List<PlayerInput>();
+	int enumeratorIndex = -1;
+
+	void Start() {
+		CreateInputs();
+	}
 
 	void CreateInputs() {
-		inputs = new List<PlayerInput>();
-
 		for(int i = 1; i <= 8; i++) {
 			PlayerInput input = new PlayerInput();
 			
 			string namePrefix = "" + i + "p";
-			
-			if(playerOneIsSpecial && i == 1)
-				namePrefix = ""; // Use keyboard for player 1
 
-			input.AssignControl(PlayerInput.Horizontal, namePrefix + "Horizontal");
-			input.AssignControl(PlayerInput.Vertical, namePrefix + "Vertical");
-			input.AssignControl(PlayerInput.Start, namePrefix + "Fire1");/**/
+			if(i == 1)
+				namePrefix = "";
+
+			input.AssignControl(PlayerInput.Horizontal, "Horizontal");
+			input.AssignControl(PlayerInput.Vertical, "Vertical");
+			input.AssignControl(PlayerInput.Start, namePrefix + "Fire1");
 			input.AssignControl(PlayerInput.Fire1, namePrefix + "Fire1");
 			input.AssignControl(PlayerInput.Fire2, namePrefix + "Fire2");
 //			input.AssignControl(PlayerInput.Fire3, namePrefix + "Fire3");
@@ -31,10 +34,30 @@ public class PlayerInputs : MonoBehaviour {
 		}
 	}
 
-	public PlayerInput GetInput(int player) {
-		if(inputs == null)
-			CreateInputs();
+	public PlayerInput GetInput(int input) {
+		return inputs[input];
+	}
 
-		return inputs[player];
+	public IEnumerator GetEnumerator() {
+		Reset();
+		return this;
+	}
+
+	public void Reset() {
+		enumeratorIndex = -1;
+	}
+
+	public bool MoveNext() {
+		if(enumeratorIndex >= inputs.Count - 1)
+			return false;
+
+		enumeratorIndex++;
+		return true;
+	}
+
+	public object Current {
+		get {
+			return inputs[enumeratorIndex];
+		}
 	}
 }
