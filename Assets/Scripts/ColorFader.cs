@@ -1,4 +1,4 @@
-
+using UnityEngine;
 
 public class ColorFader : MonoBehaviour {
 	new Camera camera;
@@ -47,4 +47,3 @@ public class ColorFader : MonoBehaviour {
 		this.camera = camera;
 	}
 }
-
