@@ -2,36 +2,42 @@
 using System.Collections;
 
 public class PlayerColor {
-	public Material material;
+	public Material[] materials;
 	public Color color;
 
-	public PlayerColor(Material material, Color color) {
-		this.material = material;
-		this.color = color;
+	public PlayerColor() {
+		materials = new Material[2];
 	}
 }
 
 public class PlayerColors : MonoBehaviour {
-	public Material[] materials;
+	public Material[] swordyMaterials;
 	public Color[] colors;
 	PlayerColor[] playerColors;
 
 	public static PlayerColor[] GetColors() {
 		GameObject instance = GameObject.Find("playerColors");
 
-		AyloDebug.Assert(instance != null); // Make sure the scene contains a PlayerColors prefab called "playerColors"
-
 		return instance.GetComponent<PlayerColors>().NonstaticGetColors();
 	}
 
 	PlayerColor[] NonstaticGetColors() {
-		AyloDebug.Assert(materials.Length == colors.Length);
+		AyloDebug.Assert(swordyMaterials.Length == 8);
+		AyloDebug.Assert(colors.Length == 8);
 
+		// Create PlayerColor array
 		if(playerColors == null) {
-			playerColors = new PlayerColor[materials.Length];
+			playerColors = new PlayerColor[swordyMaterials.Length];
 
-			for(uint i = 0; i < materials.Length; i++)
-				playerColors[i] = new PlayerColor(materials[i], colors[i]);
+			for(uint i = 0; i < 8; i++) {
+				var playerColor = new PlayerColor();
+
+				playerColor.materials[0] = swordyMaterials[i];
+				playerColor.materials[1] = swordyMaterials[i];/**/
+				playerColor.color = colors[i];
+
+				playerColors[i] = playerColor;
+			}
 		}
 
 		return playerColors;

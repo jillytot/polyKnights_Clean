@@ -5,6 +5,9 @@ public class ColorFader : MonoBehaviour {
 	Texture2D texture;
 	Color color = Color.black;
 	float fadeAmount = 0;
+	bool fading;
+	float fadeStartTime;
+	float fadeTime;
 
 	public static ColorFader Create(Camera camera) {
 		var colorFader = new GameObject("colorFader", typeof(ColorFader)).GetComponent<ColorFader>();
@@ -19,6 +22,25 @@ public class ColorFader : MonoBehaviour {
 		UpdateTexture();
 	}
 
+	public float FadeAmount {
+		set {
+			fadeAmount = Mathf.Clamp(value, 0, 1);
+			UpdateTexture();
+		}
+	}
+
+	public void BeginFade(float time) {
+		fadeTime = time;
+		fading = true;
+		fadeStartTime = Time.time;
+	}
+
+	public bool Fading {
+		get {
+			return fading;
+		}
+	}
+
 	void Start() {
 		texture = new Texture2D(1, 1);
 		texture.alphaIsTransparency = true;
@@ -26,14 +48,20 @@ public class ColorFader : MonoBehaviour {
 	}
 	
 	void OnGUI() {
-		if(fadeAmount != 0 && camera != null)
-			GUI.DrawTexture(camera.pixelRect, texture);
-	}
+		if(camera == null)
+			return;
 
-	public void SetFadeAmount(float amount) {
-		fadeAmount = Mathf.Clamp(amount, 0, 1);
-		
-		UpdateTexture();
+		if(fading) {
+			float timeSinceStart = Time.time - fadeStartTime;
+
+			if(timeSinceStart <= fadeTime)
+				FadeAmount = timeSinceStart / fadeTime;
+			else
+				FadeAmount = 1;
+		}
+
+		if(fadeAmount != 0)
+			GUI.DrawTexture(camera.pixelRect, texture);
 	}
 
 	void UpdateTexture() {

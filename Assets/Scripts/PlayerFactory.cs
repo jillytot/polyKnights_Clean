@@ -2,33 +2,34 @@
 using System.Collections.Generic;
 
 public class PlayerFactory : MonoBehaviour {
-	public GameObject playerPrefab;
-	public Material[] materials;
-	public Color[] colors;
+	public GameObject[] playerPrefabs;
+	IList<Player> players;
 
-	List<Player> players;
+	// Creates a number of player GameObjects from playerPrefabs
+	public GameObject[] CreatePlayers(PlayerDescription[] playerDescriptions) {
+		AyloDebug.Assert(playerDescriptions.Length <= 8);
 
-	// Creates a number of player GameObjects from playerPrefab
-	public GameObject[] CreatePlayers(playerClass[] playerClasses) {
-		AyloDebug.Assert(playerClasses.Length <= 8);
-
+		var numberOfPlayers = playerDescriptions.Length;
 		players = new List<Player>();
-		var positions = new RowPositions(playerClasses.Length);
+		var positions = new RowPositions(numberOfPlayers);
+		var playerColors = PlayerColors.GetColors();
 
-		for(uint i = 0; i < playerClasses.Length; i++) {
-			var playerGameObject = (GameObject)Instantiate(playerPrefab);
-			var player = new Player(playerGameObject, i, playerClasses[i]);
+		for(uint i = 0; i < numberOfPlayers; i++) {
+			var playerGameObject = (GameObject)Instantiate(playerPrefabs[0]);
+			var playerClass = playerDescriptions[i].playerClass;
+			var playerColorIndex = playerDescriptions[i].playerColorIndex;
+			var playerColor = playerColors[playerDescriptions[i].playerColorIndex];
+			var player = new Player(playerGameObject, i, playerClass);
 
-			player.material = new PlayerMaterial(materials[i], colors[i]);
-			player.position = positions.GetNextPosition();
-
+			player.Color = playerColor;
+			player.Position = positions.GetNextPosition();
 			players.Add(player);
 		}
 
 		// this is temporary
 		var playerGameObjects = new List<GameObject>();
 		foreach(var player in players)
-			playerGameObjects.Add(player.gameObject);
+			playerGameObjects.Add(player.GameObject);
 		return playerGameObjects.ToArray();
 	}
 }

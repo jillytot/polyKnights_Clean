@@ -13,11 +13,11 @@ namespace PlayerSelection {
 		IDictionary<int, GameObject> menuItems = new Dictionary<int, GameObject>();
 		bool joined;
 		int activeMenuItem;
-		int currentColorIndex = -1;
+		int colorIndex = -1;
 		int currentPlayerClass;
 		bool ready;
 
-		SkinnedMeshRenderer playerMesh;
+		IList<Renderer> playerMeshes = new List<Renderer>();
 		Animator playerAnimator;
 		MeshRenderer leftArrow, rightArrow;
 		MeshRenderer colorRectangle;
@@ -25,17 +25,16 @@ namespace PlayerSelection {
 		TextMesh readyText;
 		Material disabledMaterial;
 		
-		static CyclicAllocator<PlayerColor> colorAllocator;/**/
-		static string[] playerClasses = {"Swordy", "Mage", "Rawrior", "Bunny", "Kardashian", "Dalmatian", "Robot", "Tim Schafer", "Aylo Dev", "Luigi", "Biatch"};/**/
-		
+		static CyclicAllocator<PlayerColor> colorAllocator = new CyclicAllocator<PlayerColor>(PlayerColors.GetColors());
+		static string[] playerClassStrings = {"Swordy", "Mage"};
+		static playerClass[] playerClasses = {playerClass.SWORDY, playerClass.MAGE};
+
 		public Player(GameObject playerObject, Material disabledMaterial) {
 			this.playerObject = playerObject;
 			this.disabledMaterial = disabledMaterial;
 			
-			if(colorAllocator == null)/**/
-				colorAllocator = new CyclicAllocator<PlayerColor>(PlayerColors.GetColors());/**/
-			
-			playerMesh = GameObjectFunctions.GetChild(playerObject, "chickFillet", "chickFillet_mesh").GetComponent<SkinnedMeshRenderer>();
+			playerMeshes.Add(GameObjectFunctions.GetChild(playerObject, "chickFillet", "chickFillet_mesh").GetComponent<SkinnedMeshRenderer>());
+			playerMeshes.Add(GameObjectFunctions.GetChild(playerObject, "mageGirl", "mageGirl_mesh").GetComponent<MeshRenderer>());
 			playerAnimator = GameObjectFunctions.GetChild(playerObject, "chickFillet").GetComponent<Animator>();
 			
 			leftArrow = GameObjectFunctions.GetChild(playerObject, "left").GetComponent<MeshRenderer>();
@@ -44,15 +43,28 @@ namespace PlayerSelection {
 			colorRectangle = GameObjectFunctions.GetChild(playerObject, "color").GetComponent<MeshRenderer>();
 			classText = GameObjectFunctions.GetChild(playerObject, "class").GetComponent<TextMesh>();
 			readyText = GameObjectFunctions.GetChild(playerObject, "ready").GetComponent<TextMesh>();
-			
+
 			CreateMenu();
 			Joined = false;
+			UpdateClass();
 		}
-		
+
 		public void Update() {
 			menu.Update();
 		}
-		
+
+		public int ColorIndex {
+			get {
+				return colorIndex;
+			}
+		}
+
+		public int PlayerClass {
+			get {
+				return currentPlayerClass;
+			}
+		}
+
 		public bool Ready {
 			get {
 				return ready;
@@ -75,7 +87,7 @@ namespace PlayerSelection {
 				if(value)
 					CycleMenuItem(menuItemColor, value);
 				else
-					playerMesh.material = disabledMaterial;
+					playerMeshes[currentPlayerClass].material = disabledMaterial;
 				
 				Animate(value);
 				ShowMenu(value);
@@ -135,17 +147,24 @@ namespace PlayerSelection {
 		}
 		
 		void CyclePlayerColor(bool next) {
-			SetColor(colorAllocator.Get(ref currentColorIndex, next));
+			SetColor(colorAllocator.Get(ref colorIndex, next));
 		}
 		
 		void CyclePlayerClass(bool next) {
 			currentPlayerClass += next ? 1 : -1;
-			NumberFunctions.WrapAround(ref currentPlayerClass, playerClasses.Length);
-			
-			classText.text = playerClasses[currentPlayerClass];
+			NumberFunctions.WrapAround(ref currentPlayerClass, playerClassStrings.Length);
+
+			UpdateClass();
 			UpdateArrowPositions();
 		}
-		
+
+		void UpdateClass() {
+			for(int i = 0; i < playerMeshes.Count; i++)
+				playerMeshes[i].enabled = i == currentPlayerClass;
+
+			classText.text = playerClassStrings[currentPlayerClass];
+		}
+
 		void ShowMenu(bool show) {
 			leftArrow.enabled = show;
 			rightArrow.enabled = show;
@@ -174,7 +193,9 @@ namespace PlayerSelection {
 		}
 		
 		void SetColor(PlayerColor color) {
-			playerMesh.material = color.material;
+			for(int i = 0; i < playerMeshes.Count; i++)
+				playerMeshes[i].material = color.materials[i];
+
 			colorRectangle.material.color = color.color;
 			classText.color = color.color;
 			readyText.color = color.color;

@@ -8,24 +8,35 @@ namespace PlayerSelection {
 		public Material disabledMaterial;
 		public Color blinkingColor;
 		public int countdownInSeconds;
+		public float fadeTime;
+		public float timeBeforeFade;
 
 		IList<Player> players;
 		HashSet<PlayerInput> inputsInUse = new HashSet<PlayerInput>();
 		CountdownTimer timer;
 		bool playersCanJoin = true;
 		bool gameIsStarting;
+		float gameIsStartingTime;
 		int numberOfPlayersDuringCountdown;
+		ColorFader fader;
 
 		void Start() {
 			CreatePlayers(disabledMaterial);
 			timer = new CountdownTimer(countdownInSeconds);
 
 			GameObjectFunctions.Find("player1", "ready").GetComponent<TextMesh>().text = "Start game";
+			fader = ColorFader.Create(GameObject.Find("camera").GetComponent<Camera>());
 		}
 
 		void Update() {
 			if(gameIsStarting) {
-				Application.LoadLevel("open_arena");
+				var doneFading = Fading();
+
+				if(doneFading) {
+					PreparePlayerDescriptions();
+					GotoNextScreen();
+				}
+
 				return;
 			}
 
@@ -39,6 +50,7 @@ namespace PlayerSelection {
 
 			if(TimeToStartGame()) {
 				gameIsStarting = true;
+				gameIsStartingTime = Time.time;
 				playersCanJoin = false;
 
 				MakeEveryoneReady();
@@ -69,6 +81,43 @@ namespace PlayerSelection {
 
 			for(int i = 0; i < 8; i++)
 				players.Add(new Player(GameObject.Find("player" + (i + 1)), disabledMaterial));
+		}
+
+		bool Fading() {
+			float timeSinceStarting = Time.time - gameIsStartingTime;
+			
+			if(timeSinceStarting >= timeBeforeFade && !fader.Fading)
+				fader.BeginFade(fadeTime);
+			
+			if(timeSinceStarting >= timeBeforeFade + fadeTime)
+				return true;
+			else
+				return false;
+		}
+
+		void GotoNextScreen() {
+			GameObject.DontDestroyOnLoad(GameObject.Find("playerColors"));
+			Application.LoadLevel("playerSpawn");
+		}
+
+		void PreparePlayerDescriptions() {
+			int nPlayers = NumberOfJoinedPlayers();
+			var descriptions = new PlayerDescription[nPlayers];
+
+			for(int i = 0; i < nPlayers; i++) {
+				var player = players[i];
+				var description = new PlayerDescription();
+
+				description.playerColorIndex = player.ColorIndex;
+				description.playerClass = (playerClass)player.PlayerClass;
+
+				descriptions[i] = description;
+			}
+
+			var playerDescriptionsGameObject = GameObject.Find("playerDescriptions");
+			GameObject.DontDestroyOnLoad(playerDescriptionsGameObject);
+			var playerDescriptions = playerDescriptionsGameObject.GetComponent<PlayerDescriptions>();
+			playerDescriptions.descriptions = descriptions;
 		}
 
 		void CheckStartButtons() {

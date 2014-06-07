@@ -39,9 +39,24 @@ public class gameMaster : MonoBehaviour {
 		//initializing values
 
 		if(!playerFactory)
-			getPlayers = GameObject.FindGameObjectsWithTag ("Player"); // so the scenes without a PlayerFactory won't break
-		else
-			getPlayers = playerFactory.CreatePlayers(playerClasses);
+			getPlayers = GameObject.FindGameObjectsWithTag ("Player"); // So the scenes without a PlayerFactory won't break.
+		else if(GameObject.Find("playerDescriptions")) {
+			// This is the "real" one. The two other cases are only there to make things work during the transition.
+			var playerDescriptions = GameObject.Find("playerDescriptions").GetComponent<PlayerDescriptions>().descriptions;
+			getPlayers = playerFactory.CreatePlayers(playerDescriptions);
+		}
+		else {
+			// So scenes with a PlayerFactory but with PlayerDescriptions (from the player selection screen) won't break.
+			var playerDescriptions = new PlayerDescription[playerClasses.Length];
+			for(int i = 0; i < playerClasses.Length; i++) {
+				var description = new PlayerDescription();
+				description.playerClass = playerClasses[i];
+				description.playerColorIndex = i;
+				playerDescriptions[i] = description;
+			}
+
+			getPlayers = playerFactory.CreatePlayers(playerDescriptions);
+		}
 
 		walkers = GameObject.FindGameObjectsWithTag ("Walker");
 		playerTransforms = new Transform[getPlayers.Length]; //Create a reference to the transforms of the players

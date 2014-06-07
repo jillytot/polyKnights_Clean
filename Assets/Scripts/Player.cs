@@ -1,15 +1,5 @@
 ﻿using UnityEngine;
 
-public struct PlayerMaterial {
-	public Material material;
-	public Color color;
-	
-	public PlayerMaterial(Material material, Color color) {
-		this.material = material;
-		this.color = color;
-	}
-}
-
 public class Player {
 	GameObject myGameObject;
 	uint playerNumber;
@@ -27,13 +17,13 @@ public class Player {
 		myPlayerMovement.myClass = pc;
 	}
 	
-	public GameObject gameObject {
+	public GameObject GameObject {
 		get {
 			return myGameObject;
 		}
 	}
 	
-	public Vector3 position {
+	public Vector3 Position {
 		get {
 			return characterController.transform.position;
 		}
@@ -43,12 +33,13 @@ public class Player {
 		}
 	}
 	
-	public PlayerMaterial material {
+	public PlayerColor Color {
 		set {
-			gameObject.GetComponentInChildren<SkinnedMeshRenderer>().material = value.material;
-			myPlayerMovement.storeMat = value.material;
+			// TODO: Needs to be updated when the mage mesh is ready.
+			myGameObject.GetComponentInChildren<SkinnedMeshRenderer>().material = value.materials[0];
+			myPlayerMovement.storeMat = value.materials[0];
 			
-			gameObject.transform.Find("FX").Find("direction").gameObject.GetComponent<MeshRenderer>().material.color = value.color;
+			myGameObject.transform.Find("FX").Find("direction").gameObject.GetComponent<MeshRenderer>().material.color = value.color;
 			
 			SetTextColor(value.color);
 		}
