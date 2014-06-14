@@ -1,7 +1,7 @@
 /*
 Author: Adrian Alberto
-Version: 0.1
-Updated: 23 May 2014
+Version: 0.2
+Updated: 13 June 2014
 
 Simple automatic spawning system.
 Currently spawns at a fixed rate.
@@ -10,6 +10,15 @@ Planned features:
 	Increasing difficulty
 	More creatures
 	Confirm successful spawn within map
+
+
+
+
+DESIGN
+[small x 10]
+[small x 20]
+[small x 20, large x 3]
+
 */
 
 using UnityEngine;
@@ -18,8 +27,11 @@ using System.Collections;
 
 public class arenaSpawn : MonoBehaviour {
 	public GameObject creature;
+	//public GameObject creature2;
 	public float spawnInterval = 2.5f; // Time between spawns.
 	double totalTime = 0;
+	int spawnCount = 0;
+	int wave = 1;
 	
 	// Use this for initialization
 	void Start () {
@@ -39,8 +51,18 @@ public class arenaSpawn : MonoBehaviour {
 
 			final = campos + (Vector3.Scale((center - campos).normalized, new Vector3(1,0,1)) * 100) + new Vector3(0,100,0);
 
-			GameObject.Instantiate(creature, final, transform.rotation);
+			for (int i = 0; i < 4; i++){
+				GameObject.Instantiate(creature, final + new Vector3(Mathf.Sin(i*2*Mathf.PI/4)*4,0,Mathf.Cos(i*2*Mathf.PI/4)*4), transform.rotation);
+			}
+			
 			totalTime = 0; //Reset counter.
+			spawnCount++; //Add to number of times spawned, used in wave calculation
+
+			if (spawnCount > wave * 3){
+				//Next wave
+				spawnCount = 0;
+				wave++;
+			}
 		}
 	}
 }
